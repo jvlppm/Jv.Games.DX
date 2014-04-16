@@ -45,5 +45,10 @@ namespace Jv.Games.DX.Test
         {
             throw new NotImplementedException();
         }
+
+        public void ProcessEvent(System.Windows.Forms.Message msg)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

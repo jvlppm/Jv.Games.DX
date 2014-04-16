@@ -12,6 +12,7 @@ namespace Jv.Games.DX.Test
     {
         const int DefaultAdapter = 0;
         Device _device;
+        IGame _game;
 
         public GameWindow(string title, int width, int height, bool fullScreen, bool vsync = false, bool hardwareAccelerated = true)
         {
@@ -81,20 +82,34 @@ namespace Jv.Games.DX.Test
 
         public void Run(IGame game)
         {
+            if (_game != null)
+                throw new InvalidOperationException("A game is already running.");
+
             if (_device == null)
                 throw new InvalidOperationException("Setup must be called before Run.");
 
-            while(true)
+            _game = game;
+
+            while (_game != null)
             {
                 Application.DoEvents();
-                game.Process(0);
+                if (!game.Process(0))
+                    break;
                 game.Paint(_device);
             }
         }
 
         protected override void WndProc(ref Message m)
         {
+            const int WM_QUIT = 0x12;
+
+            if (_game != null)
+                _game.ProcessEvent(m);
+
             base.WndProc(ref m);
+
+            if (m.Msg == WM_QUIT)
+                _game = null;
         }
     }
 }
