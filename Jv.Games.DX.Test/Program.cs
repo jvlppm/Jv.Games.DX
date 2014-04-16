@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mage;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,6 @@ namespace Jv.Games.DX.Test
         {
             using (var win = new GameWindow("Meu jogo", 800, 600, fullScreen: false, vsync: true, hardwareAccelerated: true))
             {
-                win.Show();
                 win.Run(new MyGame());
             }
         }

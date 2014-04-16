@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Jv.Games.DX.Test
+namespace Mage
 {
     public interface IGame
     {
@@ -20,7 +20,7 @@ namespace Jv.Games.DX.Test
         //em relação ao anterior.
         //
         //Deve retornar falso para o jogo acabar.
-        bool Process(float time);
+        bool Process(TimeSpan deltaTime);
 
         //Chamado todo game loop, para que o jogo desenhe a cena.
         void Paint(SharpDX.Direct3D9.Device device);

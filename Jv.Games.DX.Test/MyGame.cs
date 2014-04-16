@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mage;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,10 +10,9 @@ namespace Jv.Games.DX.Test
     {
         public void Setup(SharpDX.Direct3D9.Device device)
         {
-            throw new NotImplementedException();
         }
 
-        public bool Process(float time)
+        public bool Process(TimeSpan deltaTime)
         {
             return true;
         }
@@ -33,22 +33,18 @@ namespace Jv.Games.DX.Test
 
         public void OnLostDevice()
         {
-            throw new NotImplementedException();
         }
 
         public void OnRestoreDevice(SharpDX.Direct3D9.Device device)
         {
-            throw new NotImplementedException();
         }
 
         public void ShutDown(SharpDX.Direct3D9.Device device)
         {
-            throw new NotImplementedException();
         }
 
         public void ProcessEvent(System.Windows.Forms.Message msg)
         {
-            throw new NotImplementedException();
         }
     }
 }
