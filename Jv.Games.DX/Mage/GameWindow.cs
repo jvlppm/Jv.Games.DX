@@ -1,14 +1,8 @@
-﻿using Jv.Games.DX.Test;
-using SharpDX.Direct3D9;
+﻿using SharpDX.Direct3D9;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using WinAPI;
 
 namespace Mage
 {
