@@ -17,6 +17,12 @@ namespace Jv.Games.DX.Test.Mesh
         public Vector3 Position;
         public Color Color;
 
+        public SimpleVertex(float x, float y, float z, float r, float g, float b, float a = 1)
+        {
+            Position = new Vector3(x, y, z);
+            Color = new Color(r, g, b, a);
+        }
+
         public static SharpDX.Direct3D9.VertexDeclaration GetDeclaration(Device device)
         {
             return _declaration ?? (_declaration = new VertexDeclaration(device, new[] {
