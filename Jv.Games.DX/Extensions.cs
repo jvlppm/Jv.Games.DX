@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Jv.Games.DX
 {
-    static class Extensions
+    public static class Extensions
     {
         public static Lock<DataStream> LockData(this VertexBuffer buffer)
         {

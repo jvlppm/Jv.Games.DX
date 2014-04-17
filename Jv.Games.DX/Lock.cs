@@ -2,7 +2,7 @@
 
 namespace Jv.Games.DX
 {
-    struct Lock<T> : IDisposable
+    public struct Lock<T> : IDisposable
     {
         public readonly T Data;
         Action _onUnlock;

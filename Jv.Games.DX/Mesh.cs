@@ -1,6 +1,8 @@
-﻿using System;
+﻿using SharpDX.Direct3D9;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Jv.Games.DX
@@ -23,26 +25,31 @@ namespace Jv.Games.DX
         public int NumPrimitives { get; private set; }
         public SharpDX.Direct3D9.PrimitiveType PrimitiveType { get; private set; }
 
-        public Mesh(SharpDX.Direct3D9.PrimitiveType type)
+        SharpDX.Direct3D9.Device _device;
+
+        public Mesh(SharpDX.Direct3D9.Device device, SharpDX.Direct3D9.PrimitiveType type)
         {
             PrimitiveType = type;
+            _device = device;
         }
 
-        public DataType[] VertexDataStream
+        protected DataType[] VertexData
         {
             set
             {
+                Vertex = new SharpDX.Direct3D9.VertexBuffer(_device, Marshal.SizeOf(typeof(DataType)) * value.Length, Usage.None, VertexFormat.None, Pool.Managed);
                 using (var stream = Vertex.LockData())
                     stream.Data.WriteRange(value);
                 NumVertices = value.Length;
             }
         }
 
-        public int[] IndexDataStream
+        protected int[] IndexData
         {
             set
             {
-                using (var stream = Vertex.LockData())
+                Index = new SharpDX.Direct3D9.IndexBuffer(_device, Marshal.SizeOf(typeof(int)) * value.Length, Usage.None, Pool.Managed, false);
+                using (var stream = Index.LockData())
                     stream.Data.WriteRange(value);
 
                 switch (PrimitiveType)
