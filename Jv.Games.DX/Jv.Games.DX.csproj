@@ -49,10 +49,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Lock.cs" />
     <Compile Include="Mage\GameWindow.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Mage\IGame.cs" />
+    <Compile Include="Mesh.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
