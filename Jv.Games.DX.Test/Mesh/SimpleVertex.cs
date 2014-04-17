@@ -1,4 +1,5 @@
 ﻿using SharpDX;
+using SharpDX.Direct3D9;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,18 @@ namespace Jv.Games.DX.Test.Mesh
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     struct SimpleVertex
     {
+        static VertexDeclaration _declaration;
+
         public Vector3 Position;
         public Color Color;
+
+        public static SharpDX.Direct3D9.VertexDeclaration GetDeclaration(Device device)
+        {
+            return _declaration ?? (_declaration = new VertexDeclaration(device, new[] {
+                new VertexElement(0, 0, DeclarationType.Float3, DeclarationMethod.Default, DeclarationUsage.Position, 0),
+                new VertexElement(0, 12, DeclarationType.Color, DeclarationMethod.Default, DeclarationUsage.Color, 0),
+                VertexElement.VertexDeclarationEnd
+            }));
+        }
     }
 }

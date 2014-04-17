@@ -16,7 +16,7 @@ namespace Jv.Games.DX
         SharpDX.Direct3D9.PrimitiveType PrimitiveType { get; }
     }
 
-    public class Mesh<DataType>
+    public class Mesh<DataType> : IMesh
         where DataType : struct
     {
         public SharpDX.Direct3D9.VertexBuffer Vertex { get; private set; }

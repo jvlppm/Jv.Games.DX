@@ -1,15 +1,21 @@
-﻿using Mage;
+﻿using Jv.Games.DX.Test.Mesh;
+using Mage;
+using SharpDX.Direct3D9;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Jv.Games.DX.Test
 {
     class MyGame : IGame
     {
+        IMesh mesh;
+
         public void Setup(SharpDX.Direct3D9.Device device)
         {
+            mesh = new TriangleGrid(device, 8, 8, 3, 3);
         }
 
         public bool Process(TimeSpan deltaTime)
@@ -25,6 +31,11 @@ namespace Jv.Games.DX.Test
             device.BeginScene();    // Começa a cena 3D
 
             //O código do desenho vai aqui
+            device.VertexDeclaration = SimpleVertex.GetDeclaration(device);
+            device.SetStreamSource(0, mesh.Vertex, 0, Marshal.SizeOf(typeof(SimpleVertex)));
+            device.Indices = mesh.Index;
+            device.DrawIndexedPrimitive(mesh.PrimitiveType, 0, 0, mesh.NumVertices, 0, mesh.NumPrimitives);
+
 
             device.EndScene();    // Finaliza a cena 3D.
 
