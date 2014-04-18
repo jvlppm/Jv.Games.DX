@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Jv.Games.DX.Test.Objects
 {
-    class Cube : Model
+    class Water : Model
     {
-        public Cube(Device device, float width, float height, float depth)
-            : base(new Mesh.Cube(device, width, height, depth), new Materials.SimpleMaterial())
+        public Water(Device device, float width, float depth, int rows, int cols)
+            : base(new Mesh.TriangleGrid(device, width, depth, rows, cols), new Materials.WaveMaterial())
         {
 
         }

@@ -51,13 +51,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviors\LookAtObject.cs" />
     <Compile Include="Materials\BaseMaterial.cs" />
-    <Compile Include="Materials\SimpleMaterial.cs" />
+    <Compile Include="Materials\WaveMaterial.cs" />
     <Compile Include="Mesh\SimpleVertex.cs" />
     <Compile Include="Mesh\TriangleGrid.cs" />
     <Compile Include="MyGame.cs" />
     <Compile Include="Mesh\Cube.cs" />
-    <Compile Include="Objects\Cube.cs" />
+    <Compile Include="Objects\Water.cs" />
     <Compile Include="Objects\Model.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -72,7 +73,11 @@
       <Name>Jv.Games.DX</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Materials\wave.fx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

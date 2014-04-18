@@ -8,19 +8,19 @@ using System.Text;
 
 namespace Jv.Games.DX
 {
-    class Scene : GameObject
+    public class Scene : GameObject
     {
         readonly Device _device;
         List<Camera> Cameras;
         Dictionary<string, Effect> ShadersByName;
-        Dictionary<Effect, Dictionary<string, List<MeshRenderer>>> RenderersByTechnique;
+        Dictionary<Effect, Dictionary<EffectHandle, List<MeshRenderer>>> RenderersByTechnique;
 
         public Scene(Device device)
         {
             _device = device;
             Cameras = new List<Camera>();
             ShadersByName = new Dictionary<string, Effect>();
-            RenderersByTechnique = new Dictionary<Effect, Dictionary<string, List<MeshRenderer>>>();
+            RenderersByTechnique = new Dictionary<Effect, Dictionary<EffectHandle, List<MeshRenderer>>>();
         }
 
         public IDisposable Register(Camera camera)
@@ -35,13 +35,15 @@ namespace Jv.Games.DX
             if (!ShadersByName.TryGetValue(renderer.Material.Effect, out shader))
                 ShadersByName[renderer.Material.Effect] = (shader = LoadShaderFromFile(renderer.Material.Effect));
 
+            var technique = shader.GetTechnique(renderer.Material.Technique);
+
             if (!RenderersByTechnique.ContainsKey(shader))
-                RenderersByTechnique[shader] = new Dictionary<string, List<MeshRenderer>>();
+                RenderersByTechnique[shader] = new Dictionary<EffectHandle, List<MeshRenderer>>();
 
             if (!RenderersByTechnique[shader].ContainsKey(renderer.Material.Technique))
-                RenderersByTechnique[shader][renderer.Material.Technique] = new List<MeshRenderer>();
+                RenderersByTechnique[shader][technique] = new List<MeshRenderer>();
 
-            var regLocation = RenderersByTechnique[shader][renderer.Material.Technique];
+            var regLocation = RenderersByTechnique[shader][technique];
             regLocation.Add(renderer);
             return Disposable.Create(() => regLocation.Remove(renderer));
         }
@@ -51,8 +53,20 @@ namespace Jv.Games.DX
             return Effect.FromFile(_device, file, ShaderFlags.Debug);
         }
 
+        public override void Init()
+        {
+            base.Init();
+
+            foreach (var item in from kvS in RenderersByTechnique
+                                 from kvT in kvS.Value
+                                 from r in kvT.Value
+                                 select new { Renderer = r, Shader = kvS.Key })
+                item.Renderer.Material.Init(item.Shader);
+        }
+
         public void Draw()
         {
+            _device.Clear(SharpDX.Direct3D9.ClearFlags.Target | SharpDX.Direct3D9.ClearFlags.ZBuffer, new SharpDX.ColorBGRA(0, 20, 80, byte.MaxValue), 1.0f, 0);
             _device.BeginScene();
 
             foreach (var cam in Cameras)
@@ -69,7 +83,7 @@ namespace Jv.Games.DX
                     foreach (var kvT in kvS.Value)
                     {
                         var technique = kvT.Key;
-                        shader.Technique = shader.GetTechnique(technique);
+                        shader.Technique = technique;
 
                         foreach (var renderer in kvT.Value)
                         {
@@ -77,19 +91,20 @@ namespace Jv.Games.DX
 
                             var mvp = renderer.Object.GlobalTransform * vp;
                             shader.SetValue(wvpHandler, mvp);
-                            renderer.Material.SetValues(shader);
+                            renderer.Material.SetValues();
 
                             _device.VertexDeclaration = renderer.Mesh.VertexDeclaration;
                             _device.SetStreamSource(0, renderer.Mesh.Vertex, 0, renderer.Mesh.VertexSize);
                             _device.Indices = renderer.Mesh.Index;
 
                             var passes = shader.Begin();
-                            for (var pass = 0; pass < passes; pass++ )
+                            for (var pass = 0; pass < passes; pass++)
                             {
                                 shader.BeginPass(pass);
                                 _device.DrawIndexedPrimitive(mesh.PrimitiveType, 0, 0, mesh.NumVertices, 0, mesh.NumPrimitives);
                                 shader.EndPass();
                             }
+                            shader.End();
                         }
                     }
                 }

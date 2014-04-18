@@ -10,14 +10,14 @@ namespace Jv.Games.DX.Test.Mesh
 {
     class TriangleGrid : Mesh<SimpleVertex>
     {
-        public TriangleGrid(Device device, int width, int height, int rows, int cols)
+        public TriangleGrid(Device device, float width, float depth, int rows, int cols)
             : base(device, PrimitiveType.TriangleStrip, SimpleVertex.GetDeclaration(device))
         {
             float squareWidth = width / (float)cols;
-            float squareHeight = height / (float)rows;
+            float squareDepth = depth / (float)rows;
 
             float baseX = width / 2;
-            float baseY = height / 2;
+            float baseY = depth / 2;
             var vertices = new List<SimpleVertex>();
 
             for (int row = 0; row <= rows; row++)
@@ -30,7 +30,7 @@ namespace Jv.Games.DX.Test.Mesh
 
                     vertices.Add(new SimpleVertex
                     {
-                        Position = new Vector3(col * squareWidth - baseX, 0.0f, row * squareHeight - baseY),
+                        Position = new Vector3(col * squareWidth - baseX, 0.0f, row * squareDepth - baseY),
                         Color = new Color((int)(255 * r), (int)(255 * g), (int)(255 * b))
                     });
                 }

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Jv.Games.DX
 {
-    class Camera : GameObject
+    public class Camera : GameObject
     {
         IDisposable _sceneRegistration;
         public Viewport Viewport;

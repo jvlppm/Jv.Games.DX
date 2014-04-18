@@ -6,7 +6,7 @@ namespace Jv.Games.DX.Test.Objects
     {
         public Model(IMesh mesh, Material material)
         {
-            this.Components.Add(new MeshRenderer { Mesh = mesh, Material = material });
+            this.Attach(new MeshRenderer { Mesh = mesh, Material = material });
         }
     }
 }

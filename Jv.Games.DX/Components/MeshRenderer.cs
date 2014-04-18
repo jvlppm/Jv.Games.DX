@@ -22,6 +22,12 @@ namespace Jv.Games.DX.Components
             base.Init();
         }
 
+        public override void Update(TimeSpan deltaTime)
+        {
+            if (Material != null)
+                Material.Update(deltaTime);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

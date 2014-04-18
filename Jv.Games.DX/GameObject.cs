@@ -44,18 +44,6 @@ namespace Jv.Games.DX
             Transform = Matrix.Identity;
         }
 
-        public GameObject Add(Components.Component component)
-        {
-            if (_disposed)
-                throw new ObjectDisposedException(GetType().FullName);
-
-            if (component.Object != null)
-                throw new InvalidOperationException("Specified component already have an associated object.");
-            component.Object = this;
-            Components.Add(component);
-            return this;
-        }
-
         public virtual T Add<T>(T gameObject)
             where T : GameObject
         {
@@ -68,6 +56,18 @@ namespace Jv.Games.DX
             gameObject.Parent = this;
             Children.Add(gameObject);
             return gameObject;
+        }
+
+        public GameObject Attach(Components.Component component)
+        {
+            if (_disposed)
+                throw new ObjectDisposedException(GetType().FullName);
+
+            if (component.Object != null)
+                throw new InvalidOperationException("Specified component already have an associated object.");
+            component.Object = this;
+            Components.Add(component);
+            return this;
         }
 
         void ClearGlobalTransform()
@@ -83,6 +83,15 @@ namespace Jv.Games.DX
 
             foreach (var child in Children)
                 child.Init();
+        }
+
+        public virtual void Update(TimeSpan deltaTime)
+        {
+            foreach (var cmp in Components)
+                cmp.Update(deltaTime);
+
+            foreach (var child in Children)
+                child.Update(deltaTime);
         }
 
         public void Dispose()

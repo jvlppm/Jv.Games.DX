@@ -11,41 +11,42 @@ namespace Jv.Games.DX
     {
         struct Uniform
         {
-            public string Name;
             public Action<Effect> SetValue;
             public EffectHandle Handle;
         }
 
         public readonly string Effect;
         public readonly string Technique;
+        Effect _shader;
 
-        Dictionary<string, Uniform> Uniforms;
+        Dictionary<EffectHandle, Uniform> Uniforms;
 
         public Material(string effect, string technique)
         {
             Effect = effect;
             Technique = technique;
-            Uniforms = new Dictionary<string, Uniform>();
+            Uniforms = new Dictionary<EffectHandle, Uniform>();
         }
 
-        protected void Set<T>(string name, T value)
+        protected void Set<T>(EffectHandle handle, T value)
             where T : struct
         {
-            Uniform uniform;
-            if (!Uniforms.TryGetValue(name, out uniform))
-                Uniforms[name] = uniform = new Uniform { Name = name };
-            uniform.SetValue = e =>
-            {
-                if (uniform.Handle == null)
-                    uniform.Handle = e.GetParameter(null, uniform.Name);
-                e.SetValue(uniform.Handle, value);
+            Uniforms[handle] = new Uniform {
+                Handle = handle,
+                SetValue = e => e.SetValue(handle, value)
             };
         }
 
-        public void SetValues(SharpDX.Direct3D9.Effect shader)
+        public virtual void Init(Effect shader)
         {
-            foreach(var uniform in Uniforms.Values)
-                uniform.SetValue(shader);
+            _shader = shader;
+        }
+        public virtual void Update(TimeSpan gameTime) { }
+
+        public void SetValues()
+        {
+            foreach (var uniform in Uniforms.Values)
+                uniform.SetValue(_shader);
         }
     }
 }

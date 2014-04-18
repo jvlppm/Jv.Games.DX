@@ -11,6 +11,7 @@ namespace Jv.Games.DX.Components
         public GameObject Object;
 
         public virtual void Init() { }
+        public virtual void Update(TimeSpan deltaTime) { }
 
         ~Component()
         {

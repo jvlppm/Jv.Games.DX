@@ -6,7 +6,7 @@ namespace Mage
     public interface IGame
     {
         //Inicializa o jogo. Roda imediatamente antes do game loop iniciar.
-        void Setup(SharpDX.Direct3D9.Device device);
+        void Setup(SharpDX.Direct3D9.Device device, GameWindow window);
 
         //Ativado sempre que um evento do windows chega.
         void ProcessEvent(Message msg);

@@ -104,7 +104,7 @@ namespace Mage
             try
             {
                 var sw = Stopwatch.StartNew();
-                _game.Setup(_device);
+                _game.Setup(_device, this);
 
                 while (_game != null)
                 {
