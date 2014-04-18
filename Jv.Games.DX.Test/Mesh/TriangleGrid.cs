@@ -11,7 +11,7 @@ namespace Jv.Games.DX.Test.Mesh
     class TriangleGrid : Mesh<SimpleVertex>
     {
         public TriangleGrid(Device device, int width, int height, int rows, int cols)
-            : base(device, PrimitiveType.TriangleStrip)
+            : base(device, PrimitiveType.TriangleStrip, SimpleVertex.GetDeclaration(device))
         {
             float squareWidth = width / (float)cols;
             float squareHeight = height / (float)rows;

@@ -7,46 +7,45 @@ using System.Text;
 
 namespace Jv.Games.DX
 {
-    public class Shader
-    {
-        public Shader(Device device, string file)
-        {
-
-        }
-
-        protected void Set(string name, object value)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     public class Material
     {
-        class Uniform
+        struct Uniform
         {
             public string Name;
-            public object Value;
-            //Location
+            public Action<Effect> SetValue;
+            public EffectHandle Handle;
         }
 
-        public readonly string Shader;
+        public readonly string Effect;
         public readonly string Technique;
 
         Dictionary<string, Uniform> Uniforms;
 
-        public Material(string shader, string technique)
+        public Material(string effect, string technique)
         {
-            Shader = shader;
+            Effect = effect;
             Technique = technique;
             Uniforms = new Dictionary<string, Uniform>();
         }
 
-        protected void Set(string name, Matrix value)
+        protected void Set<T>(string name, T value)
+            where T : struct
         {
             Uniform uniform;
             if (!Uniforms.TryGetValue(name, out uniform))
                 Uniforms[name] = uniform = new Uniform { Name = name };
-            uniform.Value = value;
+            uniform.SetValue = e =>
+            {
+                if (uniform.Handle == null)
+                    uniform.Handle = e.GetParameter(null, uniform.Name);
+                e.SetValue(uniform.Handle, value);
+            };
+        }
+
+        public void SetValues(SharpDX.Direct3D9.Effect shader)
+        {
+            foreach(var uniform in Uniforms.Values)
+                uniform.SetValue(shader);
         }
     }
 }

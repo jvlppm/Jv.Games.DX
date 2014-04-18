@@ -9,15 +9,14 @@ namespace Jv.Games.DX
     class Camera : GameObject
     {
         IDisposable _sceneRegistration;
-        RectangleF Viewport;
-        Matrix View;
-        Matrix Projection;
+        public Viewport Viewport;
+        public Matrix View;
+        public Matrix Projection;
 
         public Camera()
         {
             View = Matrix.Identity;
             Projection = Matrix.Identity;
-            Viewport = new RectangleF(0, 0, 1, 1);
         }
 
         public override void Init()

@@ -11,7 +11,7 @@ namespace Jv.Games.DX.Test.Mesh
     class Cube : Mesh<SimpleVertex>
     {
         public Cube(Device device, float width, float height, float depth)
-            : base(device, PrimitiveType.TriangleList)
+            : base(device, PrimitiveType.TriangleList, SimpleVertex.GetDeclaration(device))
         {
             var w = width / 2;
             var h = height / 2;

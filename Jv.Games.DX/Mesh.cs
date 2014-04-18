@@ -14,6 +14,8 @@ namespace Jv.Games.DX
         int NumVertices { get; }
         int NumPrimitives { get; }
         SharpDX.Direct3D9.PrimitiveType PrimitiveType { get; }
+        VertexDeclaration VertexDeclaration { get; }
+        int VertexSize { get; }
     }
 
     public class Mesh<DataType> : IMesh
@@ -24,13 +26,17 @@ namespace Jv.Games.DX
         public int NumVertices { get; private set; }
         public int NumPrimitives { get; private set; }
         public SharpDX.Direct3D9.PrimitiveType PrimitiveType { get; private set; }
+        public VertexDeclaration VertexDeclaration { get; private set; }
+        public int VertexSize { get; private set; }
 
         SharpDX.Direct3D9.Device _device;
 
-        public Mesh(SharpDX.Direct3D9.Device device, SharpDX.Direct3D9.PrimitiveType type)
+        public Mesh(SharpDX.Direct3D9.Device device, SharpDX.Direct3D9.PrimitiveType type, VertexDeclaration vertexDeclaration)
         {
             PrimitiveType = type;
             _device = device;
+            VertexDeclaration = vertexDeclaration;
+            VertexSize = Marshal.SizeOf(typeof(DataType));
         }
 
         protected DataType[] VertexData
