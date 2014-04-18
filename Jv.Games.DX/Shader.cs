@@ -28,6 +28,8 @@ namespace Jv.Games.DX
         protected void Set<T>(EffectHandle handle, T value)
             where T : struct
         {
+            if (handle == null)
+                return;
             Uniforms[handle] = new Uniform {
                 Handle = handle,
                 SetValue = e => e.SetValue(handle, value)

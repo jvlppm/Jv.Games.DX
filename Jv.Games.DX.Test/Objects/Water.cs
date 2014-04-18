@@ -1,4 +1,5 @@
-﻿using SharpDX;
+﻿using Jv.Games.DX.Test.Materials;
+using SharpDX;
 using SharpDX.Direct3D9;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Jv.Games.DX.Test.Objects
 {
-    class Water : Model
+    class Water : Model<WaveMaterial>
     {
         public Water(Device device, float width, float depth)
             : this(device, width, depth, (int)(depth / 2), (int)(width / 2))
@@ -16,7 +17,6 @@ namespace Jv.Games.DX.Test.Objects
         public Water(Device device, float width, float depth, int rows, int cols)
             : base(new Mesh.TriangleGrid(device, width, depth, rows, cols), new Materials.WaveMaterial())
         {
-
         }
     }
 }

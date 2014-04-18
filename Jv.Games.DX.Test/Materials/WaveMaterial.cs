@@ -8,11 +8,18 @@ namespace Jv.Games.DX.Test.Materials
     {
         EffectHandle _gTime, _gSource;
         TimeSpan _time;
+        Vector3 _source;
 
         public TimeSpan Time
         {
             get { return _time; }
             set { _time = value; Set(_gTime, (float)value.TotalSeconds); }
+        }
+
+        public Vector3 Source
+        {
+            get { return _source; }
+            set { _source = value; Set(_gSource, value); }
         }
 
         public WaveMaterial()
@@ -23,8 +30,10 @@ namespace Jv.Games.DX.Test.Materials
         public override void Init(Effect effect)
         {
             _gTime = effect.GetParameter(null, "gTime");
+            Set(_gTime, (float)_time.TotalSeconds);
             _gSource = effect.GetParameter(null, "gSource");
-            Source = new Vector3();
+            Set(_gSource, _source);
+
             base.Init(effect);
         }
 
@@ -33,7 +42,5 @@ namespace Jv.Games.DX.Test.Materials
             Time += deltaTime;
             base.Update(deltaTime);
         }
-
-        public Vector3 Source { set { Set(_gSource, value); } }
     }
 }

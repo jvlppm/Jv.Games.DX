@@ -4,11 +4,14 @@ namespace Jv.Games.DX.Components
 {
     public abstract class Component : IDisposable
     {
+        IDisposable _sceneRegistration;
         public GameObject Object;
 
         public virtual void Init()
         {
-            Object.GetParent<Scene>().Register(this);
+            if (_sceneRegistration != null)
+                throw new InvalidOperationException("This component is already registered in a scene.");
+            _sceneRegistration = Object.GetParent<Scene>().Register(this);
         }
 
         ~Component()
@@ -31,6 +34,8 @@ namespace Jv.Games.DX.Components
 
             if (disposing)
             {
+                _sceneRegistration.Dispose();
+
                 if (Object != null)
                     Object.Dettach(this);
             }
