@@ -50,7 +50,7 @@ OutputVS ColorVS(float3 posL : POSITION0, float4 color : COLOR0)
       OutputVS outVS = (OutputVS)0;
 
 	  //Altera a posição y de acordo com a onda.
-      posL.y = RadialWaves(posL);
+	  posL.y = RadialWaves(posL) + posL.y;
 
 	  //Altera a cor de acordo com a altura
       outVS.color = color * GetIntensityFromHeight(posL.y);

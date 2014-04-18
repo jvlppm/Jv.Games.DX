@@ -15,12 +15,12 @@ namespace Jv.Games.DX.Test.Mesh
         static VertexDeclaration _declaration;
 
         public Vector3 Position;
-        public Color Color;
+        public ColorBGRA Color;
 
         public SimpleVertex(float x, float y, float z, float r, float g, float b, float a = 1)
         {
             Position = new Vector3(x, y, z);
-            Color = new Color(r, g, b, a);
+            Color = new ColorBGRA(r, g, b, a);
         }
 
         public static SharpDX.Direct3D9.VertexDeclaration GetDeclaration(Device device)

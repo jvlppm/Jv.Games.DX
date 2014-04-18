@@ -2,6 +2,7 @@
 using Jv.Games.DX.Test.Mesh;
 using Jv.Games.DX.Test.Objects;
 using Mage;
+using SharpDX;
 using SharpDX.Direct3D9;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using System.Text;
 
 namespace Jv.Games.DX.Test
 {
-    class MyGame : IGame
+    class MyGame : IGame, IDisposable
     {
         Scene scene;
         GameWindow window;
@@ -20,7 +21,8 @@ namespace Jv.Games.DX.Test
         {
             this.window = window;
             scene = new Scene(device);
-            var water = scene.Add(new Water(device, 100, 100, 51, 51));
+            var water = scene.Add(new Water(device, 50, 50, 50, 50));
+            water.Transform = water.Transform * Matrix.Translation(new Vector3(50, 0, 0));
 
             var camera = scene.Add(new Camera());
             camera.Viewport = new SharpDX.Viewport(0, 0, window.Width, window.Height);
@@ -33,7 +35,6 @@ namespace Jv.Games.DX.Test
 
         public bool Process(TimeSpan deltaTime)
         {
-            this.window.Text = deltaTime.TotalSeconds.ToString();
             scene.Update(deltaTime);
             return true;
         }
@@ -57,6 +58,11 @@ namespace Jv.Games.DX.Test
 
         public void ProcessEvent(System.Windows.Forms.Message msg)
         {
+        }
+
+        public void Dispose()
+        {
+            scene.Dispose();
         }
     }
 }
