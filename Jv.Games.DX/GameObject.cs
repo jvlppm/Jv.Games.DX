@@ -76,6 +76,15 @@ namespace Jv.Games.DX
             Children.ForEach(c => c.ClearGlobalTransform());
         }
 
+        public virtual void Init()
+        {
+            foreach (var cmp in Components)
+                cmp.Init();
+
+            foreach (var child in Children)
+                child.Init();
+        }
+
         public void Dispose()
         {
             Dispose(true);
@@ -111,6 +120,19 @@ namespace Jv.Games.DX
                     child.Dispose();
                 }
             }
+        }
+
+        public T GetParent<T>()
+            where T : GameObject
+        {
+            var current = Parent;
+            while (current != null && !(current is T))
+                current = current.Parent;
+
+            if (current == null)
+                throw new Exception("Parent of type " + typeof(T).FullName + " was not found");
+
+            return (T)current;
         }
     }
 }

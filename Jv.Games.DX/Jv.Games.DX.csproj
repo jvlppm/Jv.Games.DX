@@ -52,6 +52,7 @@
     <Compile Include="Camera.cs" />
     <Compile Include="Components\Component.cs" />
     <Compile Include="Components\MeshRenderer.cs" />
+    <Compile Include="Disposable.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="Lock.cs" />

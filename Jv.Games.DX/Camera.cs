@@ -8,6 +8,7 @@ namespace Jv.Games.DX
 {
     class Camera : GameObject
     {
+        IDisposable _sceneRegistration;
         RectangleF Viewport;
         Matrix View;
         Matrix Projection;
@@ -17,6 +18,22 @@ namespace Jv.Games.DX
             View = Matrix.Identity;
             Projection = Matrix.Identity;
             Viewport = new RectangleF(0, 0, 1, 1);
+        }
+
+        public override void Init()
+        {
+            if (_sceneRegistration != null)
+                throw new InvalidOperationException("The camera is already registered in a scene.");
+
+            _sceneRegistration = GetParent<Scene>().Register(this);
+            base.Init();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+                _sceneRegistration.Dispose();
+            base.Dispose(disposing);
         }
 
         public void SetPerspective(float fovy, float aspect, float near, float far)
@@ -33,7 +50,7 @@ namespace Jv.Games.DX
             var height = (top - bottom);
             var zNear2 = 2 * zNear;
 
-            return new Matrix(new []{
+            return new Matrix(new[]{
                 2 * zNear / dir, 0, (right + left) / dir, 0,
                 0, zNear2 / height, (top + bottom) / height, 0,
                 0, 0, -(zFar + zNear) / zDelta, -zNear2 * zFar / zDelta,
