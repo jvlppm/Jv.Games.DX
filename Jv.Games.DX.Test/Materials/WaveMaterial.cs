@@ -12,7 +12,7 @@ namespace Jv.Games.DX.Test.Materials
         public TimeSpan Time
         {
             get { return _time; }
-            set { _time = value; Set(_gTime, value.TotalSeconds); }
+            set { _time = value; Set(_gTime, (float)value.TotalSeconds); }
         }
 
         public WaveMaterial()

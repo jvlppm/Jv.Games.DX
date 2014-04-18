@@ -50,11 +50,11 @@ namespace Jv.Games.DX
             }
         }
 
-        protected int[] IndexData
+        protected ushort[] IndexData
         {
             set
             {
-                Index = new SharpDX.Direct3D9.IndexBuffer(_device, Marshal.SizeOf(typeof(int)) * value.Length, Usage.None, Pool.Managed, false);
+                Index = new SharpDX.Direct3D9.IndexBuffer(_device, sizeof(ushort) * value.Length, Usage.None, Pool.Managed, true);
                 using (var stream = Index.LockData())
                     stream.Data.WriteRange(value);
 

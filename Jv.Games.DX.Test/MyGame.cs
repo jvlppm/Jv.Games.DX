@@ -14,9 +14,11 @@ namespace Jv.Games.DX.Test
     class MyGame : IGame
     {
         Scene scene;
+        GameWindow window;
 
         public void Setup(SharpDX.Direct3D9.Device device, GameWindow window)
         {
+            this.window = window;
             scene = new Scene(device);
             var water = scene.Add(new Water(device, 100, 100, 51, 51));
 
@@ -24,13 +26,14 @@ namespace Jv.Games.DX.Test
             camera.Viewport = new SharpDX.Viewport(0, 0, window.Width, window.Height);
             camera.SetPerspective(60, window.Width / (float)window.Height, 1, 5000);
             camera.Attach(new LookAtObject(water));
-            camera.Transform = camera.Transform * SharpDX.Matrix.Translation(new SharpDX.Vector3(0, 30, -50));
+            camera.Transform = camera.Transform * SharpDX.Matrix.Translation(new SharpDX.Vector3(0, 30, 50));
 
             scene.Init();
         }
 
         public bool Process(TimeSpan deltaTime)
         {
+            this.window.Text = deltaTime.TotalSeconds.ToString();
             scene.Update(deltaTime);
             return true;
         }

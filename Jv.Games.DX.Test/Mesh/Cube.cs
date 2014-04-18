@@ -55,7 +55,7 @@ namespace Jv.Games.DX.Test.Mesh
                 new SimpleVertex(-w, h, -d, 0, 1, 0),
             };
 
-            IndexData = new[]{
+            IndexData = new ushort[]{
                 0, 2, 1, 0, 3, 2,    // Front face
                 4, 6, 5, 4, 7, 6,    // Back face
                 8, 10, 9, 8, 11, 10,  // Top face
