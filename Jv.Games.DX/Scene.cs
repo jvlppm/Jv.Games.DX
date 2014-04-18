@@ -66,7 +66,7 @@ namespace Jv.Games.DX
 
         public void Draw()
         {
-            _device.Clear(SharpDX.Direct3D9.ClearFlags.Target | SharpDX.Direct3D9.ClearFlags.ZBuffer, new SharpDX.ColorBGRA(0, 20, 80, byte.MaxValue), 1.0f, 0);
+            _device.Clear(SharpDX.Direct3D9.ClearFlags.Target | SharpDX.Direct3D9.ClearFlags.ZBuffer, new SharpDX.Color(0, 0, 0), 1.0f, 0);
             _device.BeginScene();
 
             foreach (var cam in Cameras)
@@ -91,11 +91,12 @@ namespace Jv.Games.DX
 
                             var mvp = renderer.Object.GlobalTransform * vp;
                             shader.SetValue(wvpHandler, mvp);
-                            renderer.Material.SetValues();
 
                             _device.VertexDeclaration = renderer.Mesh.VertexDeclaration;
                             _device.SetStreamSource(0, renderer.Mesh.Vertex, 0, renderer.Mesh.VertexSize);
                             _device.Indices = renderer.Mesh.Index;
+
+                            renderer.Material.SetValues();
 
                             var passes = shader.Begin();
                             for (var pass = 0; pass < passes; pass++)

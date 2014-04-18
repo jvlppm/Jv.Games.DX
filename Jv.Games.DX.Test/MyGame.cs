@@ -21,6 +21,7 @@ namespace Jv.Games.DX.Test
             var water = scene.Add(new Water(device, 100, 100, 51, 51));
 
             var camera = scene.Add(new Camera());
+            camera.Viewport = new SharpDX.Viewport(0, 0, window.Width, window.Height);
             camera.SetPerspective(60, window.Width / (float)window.Height, 1, 5000);
             camera.Attach(new LookAtObject(water));
             camera.Transform = camera.Transform * SharpDX.Matrix.Translation(new SharpDX.Vector3(0, 30, -50));
