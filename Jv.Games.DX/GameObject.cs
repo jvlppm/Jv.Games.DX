@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Jv.Games.DX
 {
-    public class GameObject
+    public class GameObject : IDisposable
     {
         Matrix _transform;
         Matrix? _globalTransform;
@@ -44,32 +44,73 @@ namespace Jv.Games.DX
             Transform = Matrix.Identity;
         }
 
-        void Add(Components.Component component)
+        public GameObject Add(Components.Component component)
         {
+            if (_disposed)
+                throw new ObjectDisposedException(GetType().FullName);
+
             if (component.Object != null)
                 throw new InvalidOperationException("Specified component already have an associated object.");
             component.Object = this;
             Components.Add(component);
+            return this;
         }
 
-        void Add(GameObject gameObject)
+        public virtual T Add<T>(T gameObject)
+            where T : GameObject
         {
+            if (_disposed)
+                throw new ObjectDisposedException(GetType().FullName);
+
             if (gameObject.Parent != null)
                 throw new InvalidOperationException("Specified object already have a Parent");
 
             gameObject.Parent = this;
             Children.Add(gameObject);
+            return gameObject;
         }
 
-        private void ClearGlobalTransform()
+        void ClearGlobalTransform()
         {
             _globalTransform = null;
             Children.ForEach(c => c.ClearGlobalTransform());
         }
 
-        public void Destroy()
+        public void Dispose()
         {
-            Parent.Children.Remove(this);
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~GameObject()
+        {
+            Dispose(false);
+        }
+
+        bool _disposed;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+            _disposed = true;
+
+            if (disposing)
+            {
+                if (Parent != null)
+                    Parent.Children.Remove(this);
+
+                foreach (var cmp in Components)
+                {
+                    cmp.Object = null;
+                    cmp.Dispose();
+                }
+
+                foreach (var child in Children)
+                {
+                    child.Parent = null;
+                    child.Dispose();
+                }
+            }
         }
     }
 }

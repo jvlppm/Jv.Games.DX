@@ -116,7 +116,10 @@ namespace Mage
                         if (game.Process(deltaTime))
                             game.Paint(_device);
                         else
+                        {
                             Close();
+                            break;
+                        }
                     }
                 }
             }
