@@ -55,6 +55,7 @@
     <Compile Include="Disposable.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="GameObject.cs" />
+    <Compile Include="IUpdateable.cs" />
     <Compile Include="Lock.cs" />
     <Compile Include="Mage\GameWindow.cs">
       <SubType>Form</SubType>

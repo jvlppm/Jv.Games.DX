@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jv.Games.DX.Components
 {
-    public class MeshRenderer : Component
+    public class MeshRenderer : Component, IUpdateable
     {
         IDisposable _sceneRegistration;
 
@@ -22,7 +18,7 @@ namespace Jv.Games.DX.Components
             base.Init();
         }
 
-        public override void Update(TimeSpan deltaTime)
+        public void Update(TimeSpan deltaTime)
         {
             if (Material != null)
                 Material.Update(deltaTime);

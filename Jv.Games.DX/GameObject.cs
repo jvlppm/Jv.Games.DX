@@ -1,22 +1,31 @@
-﻿using Jv.Games.DX.Components;
-using SharpDX;
+﻿using SharpDX;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jv.Games.DX
 {
     public class GameObject : IDisposable
     {
+        #region Attributes
         Matrix _transform;
         Matrix? _globalTransform;
 
-        public GameObject Parent;
-        public List<GameObject> Children;
-        public List<Components.Component> Components;
+        List<GameObject> _children;
+        List<Components.Component> _components;
 
+        public GameObject Parent;
+        #endregion
+
+        #region Constructors
+        public GameObject()
+        {
+            _children = new List<GameObject>();
+            _components = new List<Components.Component>();
+            Transform = Matrix.Identity;
+        }
+        #endregion
+
+        #region Position
         public Matrix Transform
         {
             get { return _transform; }
@@ -37,13 +46,19 @@ namespace Jv.Games.DX
             }
         }
 
-        public GameObject()
+        void ClearGlobalTransform()
         {
-            Children = new List<GameObject>();
-            Components = new List<Components.Component>();
-            Transform = Matrix.Identity;
+            _globalTransform = null;
+            _children.ForEach(c => c.ClearGlobalTransform());
         }
 
+        public void Translate(int x, int y, int z)
+        {
+            Transform = _transform * Matrix.Translation(new Vector3(x, y, z));
+        }
+        #endregion
+
+        #region Hierarchy
         public virtual T Add<T>(T gameObject)
             where T : GameObject
         {
@@ -54,7 +69,7 @@ namespace Jv.Games.DX
                 throw new InvalidOperationException("Specified object already have a Parent");
 
             gameObject.Parent = this;
-            Children.Add(gameObject);
+            _children.Add(gameObject);
             return gameObject;
         }
 
@@ -66,34 +81,38 @@ namespace Jv.Games.DX
             if (component.Object != null)
                 throw new InvalidOperationException("Specified component already have an associated object.");
             component.Object = this;
-            Components.Add(component);
+            _components.Add(component);
             return this;
         }
-
-        void ClearGlobalTransform()
+        public void Dettach(Components.Component component)
         {
-            _globalTransform = null;
-            Children.ForEach(c => c.ClearGlobalTransform());
+            _components.Remove(component);
         }
+        
+        public T GetParent<T>()
+            where T : GameObject
+        {
+            var current = Parent;
+            while (current != null && !(current is T))
+                current = current.Parent;
+
+            if (current == null)
+                throw new Exception("Parent of type " + typeof(T).FullName + " was not found");
+
+            return (T)current;
+        }
+        #endregion
 
         public virtual void Init()
         {
-            foreach (var cmp in Components)
+            foreach (var cmp in _components)
                 cmp.Init();
 
-            foreach (var child in Children)
+            foreach (var child in _children)
                 child.Init();
         }
 
-        public virtual void Update(TimeSpan deltaTime)
-        {
-            foreach (var cmp in Components)
-                cmp.Update(deltaTime);
-
-            foreach (var child in Children)
-                child.Update(deltaTime);
-        }
-
+        #region IDisposable
         public void Dispose()
         {
             Dispose(true);
@@ -115,33 +134,21 @@ namespace Jv.Games.DX
             if (disposing)
             {
                 if (Parent != null)
-                    Parent.Children.Remove(this);
+                    Parent._children.Remove(this);
 
-                foreach (var cmp in Components)
+                foreach (var cmp in _components)
                 {
                     cmp.Object = null;
                     cmp.Dispose();
                 }
 
-                foreach (var child in Children)
+                foreach (var child in _children)
                 {
                     child.Parent = null;
                     child.Dispose();
                 }
             }
         }
-
-        public T GetParent<T>()
-            where T : GameObject
-        {
-            var current = Parent;
-            while (current != null && !(current is T))
-                current = current.Parent;
-
-            if (current == null)
-                throw new Exception("Parent of type " + typeof(T).FullName + " was not found");
-
-            return (T)current;
-        }
+        #endregion
     }
 }

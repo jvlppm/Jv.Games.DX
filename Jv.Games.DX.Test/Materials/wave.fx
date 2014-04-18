@@ -42,7 +42,7 @@ float RadialWaves(float3 position)
 float4 GetIntensityFromHeight(float y)
 {	
 	float c = y / (2.0f*a) + 0.5f;
-	return float4(c, c, c, 1.0f);
+	return float4(c, c, c, 1.0f) * 0.5f + 0.5f;
 }
 
 OutputVS ColorVS(float3 posL : POSITION0, float4 color : COLOR0)
@@ -74,7 +74,7 @@ technique TransformTech
             vertexShader = compile vs_2_0 ColorVS();
             pixelShader  = compile ps_2_0 ColorPS();
 
-			//Especifica o device state associado a essa passada.
-            FillMode = WireFrame;
+            //Especifica o device state associado a essa passada.
+            FillMode = Solid;
       }
 }

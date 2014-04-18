@@ -7,6 +7,13 @@ namespace Jv.Games.DX
 {
     public class Disposable : IDisposable
     {
+        public static readonly IDisposable Empty;
+
+        static Disposable()
+        {
+            Empty = new Disposable(null);
+        }
+
         Action<bool> _onDispose;
 
         private Disposable(Action<bool> onDispose)
@@ -28,8 +35,10 @@ namespace Jv.Games.DX
         void Dispose(bool disposing)
         {
             if (_onDispose != null)
+            {
                 _onDispose(disposing);
-            _onDispose = null;
+                _onDispose = null;
+            }
         }
 
         public static IDisposable Create(Action<bool> onDispose)

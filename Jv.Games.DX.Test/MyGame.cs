@@ -21,8 +21,7 @@ namespace Jv.Games.DX.Test
         {
             this.window = window;
             scene = new Scene(device);
-            var water = scene.Add(new Water(device, 50, 50, 50, 50));
-            water.Transform = water.Transform * Matrix.Translation(new Vector3(50, 0, 0));
+            var water = scene.Add(new Water(device, 50, 5));
 
             var camera = scene.Add(new Camera());
             camera.Viewport = new SharpDX.Viewport(0, 0, window.Width, window.Height);

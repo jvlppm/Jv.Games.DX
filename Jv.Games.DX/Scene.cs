@@ -1,16 +1,15 @@
 ﻿using Jv.Games.DX.Components;
-using SharpDX;
 using SharpDX.Direct3D9;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Jv.Games.DX
 {
     public class Scene : GameObject
     {
         readonly Device _device;
+        List<IUpdateable> Updateables;
         List<Camera> Cameras;
         Dictionary<string, Effect> ShadersByName;
         Dictionary<Effect, Dictionary<EffectHandle, List<MeshRenderer>>> RenderersByTechnique;
@@ -19,17 +18,47 @@ namespace Jv.Games.DX
         {
             _device = device;
             Cameras = new List<Camera>();
+            Updateables = new List<IUpdateable>();
             ShadersByName = new Dictionary<string, Effect>();
             RenderersByTechnique = new Dictionary<Effect, Dictionary<EffectHandle, List<MeshRenderer>>>();
         }
 
-        public IDisposable Register(Camera camera)
+        #region Register
+        public IDisposable Register(object item)
+        {
+            var disposables = new List<IDisposable>();
+
+            var camera = item as Camera;
+            if (camera != null)
+                disposables.Add(RegisterCamera(camera));
+
+            var renderer = item as MeshRenderer;
+            if(renderer != null)
+                disposables.Add(RegisterRenderer(renderer));
+
+            var updateable = item as IUpdateable;
+            if (updateable != null)
+                disposables.Add(RegisterUpdateable(updateable));
+
+            if (disposables.Count <= 0)
+                return Disposable.Empty;
+
+            return Disposable.Create(() => disposables.ForEach(d => d.Dispose()));
+        }
+
+        IDisposable RegisterUpdateable(IUpdateable updateable)
+        {
+            Updateables.Add(updateable);
+            return Disposable.Create(() => Updateables.Remove(updateable));
+        }
+
+        IDisposable RegisterCamera(Camera camera)
         {
             Cameras.Add(camera);
             return Disposable.Create(() => Cameras.Remove(camera));
         }
 
-        public IDisposable Register(MeshRenderer renderer)
+        IDisposable RegisterRenderer(MeshRenderer renderer)
         {
             Effect shader;
             if (!ShadersByName.TryGetValue(renderer.Material.Effect, out shader))
@@ -47,6 +76,7 @@ namespace Jv.Games.DX
             regLocation.Add(renderer);
             return Disposable.Create(() => regLocation.Remove(renderer));
         }
+        #endregion
 
         Effect LoadShaderFromFile(string file)
         {
@@ -62,6 +92,12 @@ namespace Jv.Games.DX
                                  from r in kvT.Value
                                  select new { Renderer = r, Shader = kvS.Key })
                 item.Renderer.Material.Init(item.Shader);
+        }
+
+        public void Update(TimeSpan deltaTime)
+        {
+            foreach (var obj in Updateables)
+                obj.Update(deltaTime);
         }
 
         public void Draw()

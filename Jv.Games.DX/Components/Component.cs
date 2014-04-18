@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jv.Games.DX.Components
 {
@@ -10,8 +6,10 @@ namespace Jv.Games.DX.Components
     {
         public GameObject Object;
 
-        public virtual void Init() { }
-        public virtual void Update(TimeSpan deltaTime) { }
+        public virtual void Init()
+        {
+            Object.GetParent<Scene>().Register(this);
+        }
 
         ~Component()
         {
@@ -34,7 +32,7 @@ namespace Jv.Games.DX.Components
             if (disposing)
             {
                 if (Object != null)
-                    Object.Components.Remove(this);
+                    Object.Dettach(this);
             }
         }
     }

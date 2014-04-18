@@ -1,4 +1,5 @@
-﻿using SharpDX;
+﻿using Jv.Games.DX.Components;
+using SharpDX;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Jv.Games.DX.Test.Behaviors
 {
-    class LookAtObject : Components.Component
+    class LookAtObject : Components.Component, IUpdateable
     {
         Camera _camera;
         GameObject _target;
@@ -23,14 +24,13 @@ namespace Jv.Games.DX.Test.Behaviors
             base.Init();
         }
 
-        public override void Update(TimeSpan deltaTime)
+        public void Update(TimeSpan deltaTime)
         {
             var eye = _camera.GlobalTransform.TranslationVector;
             var center = _target.GlobalTransform.TranslationVector;
             var up = new Vector3(0, 1, 0);
 
             _camera.View = Matrix.LookAtLH(eye, center, up);
-            base.Update(deltaTime);
         }
     }
 }
