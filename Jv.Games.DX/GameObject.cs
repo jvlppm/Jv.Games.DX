@@ -53,9 +53,13 @@ namespace Jv.Games.DX
             _children.ForEach(c => c.ClearGlobalTransform());
         }
 
+        public void Translate(Vector3 ammount)
+        {
+            Transform = _transform * Matrix.Translation(ammount);
+        }
         public void Translate(float x, float y, float z)
         {
-            Transform = _transform * Matrix.Translation(new Vector3(x, y, z));
+            Translate(new Vector3(x, y, z));
         }
         #endregion
 

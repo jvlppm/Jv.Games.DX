@@ -55,11 +55,13 @@
     <Compile Include="Behaviors\LookAtObject.cs" />
     <Compile Include="Materials\TextureMaterial.cs" />
     <Compile Include="Materials\WaveMaterial.cs" />
+    <Compile Include="Mesh\MarioHead.cs" />
     <Compile Include="Mesh\Vertex.cs" />
     <Compile Include="Mesh\SimpleVertex.cs" />
     <Compile Include="Mesh\TriangleGrid.cs" />
     <Compile Include="MyGame.cs" />
     <Compile Include="Mesh\Cube.cs" />
+    <Compile Include="Objects\Mario.cs" />
     <Compile Include="Objects\Block.cs" />
     <Compile Include="Objects\Water.cs" />
     <Compile Include="Objects\Model.cs" />
@@ -83,6 +85,9 @@
     <Content Include="Materials\wave.fx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Textures\new-mario.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Textures\block_solid.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -8,7 +8,7 @@ namespace Jv.Games.DX.Test.Mesh
     class TexturedCube : Mesh<Vertex>
     {
         public TexturedCube(Device device, float width, float height, float depth,
-            Vector2[] frontUV, Vector2[] backUV, Vector2[] topUV, Vector2[] bottomUV, Vector2[] leftUV, Vector2[] rightUV)
+            Vector2[] frontUV, Vector2[] backUV, Vector2[] leftUV, Vector2[] rightUV, Vector2[] topUV, Vector2[] bottomUV)
 
             : base(device, PrimitiveType.TriangleList, Vertex.GetDeclaration(device))
         {
@@ -35,37 +35,37 @@ namespace Jv.Games.DX.Test.Mesh
             var d = depth / 2;
 
             VertexData = new[]{
-                // Front face
+                // Front face - 0
                 new Vertex { Position = new Vector3(-w, -h, -d), UV = frontUV[0] * OpenGLTextConv, Normal = frontNormal },
                 new Vertex { Position = new Vector3(+w, -h, -d), UV = frontUV[1] * OpenGLTextConv, Normal = frontNormal },
                 new Vertex { Position = new Vector3(+w, +h, -d), UV = frontUV[2] * OpenGLTextConv, Normal = frontNormal },
                 new Vertex { Position = new Vector3(-w, +h, -d), UV = frontUV[3] * OpenGLTextConv, Normal = frontNormal },
 
-                // Back face
+                // Back face - 4
                 new Vertex { Position = new Vector3(+w, -h, +d), UV = backUV[0] * OpenGLTextConv, Normal = backNormal },
                 new Vertex { Position = new Vector3(-w, -h, +d), UV = backUV[1] * OpenGLTextConv, Normal = backNormal },
                 new Vertex { Position = new Vector3(-w, +h, +d), UV = backUV[2] * OpenGLTextConv, Normal = backNormal },
                 new Vertex { Position = new Vector3(+w, +h, +d), UV = backUV[3] * OpenGLTextConv, Normal = backNormal },
 
-                // Top face
+                // Top face - 8
                 new Vertex { Position = new Vector3(-w, +h, -d), UV = topUV[0] * OpenGLTextConv, Normal = topNormal },
                 new Vertex { Position = new Vector3(+w, +h, -d), UV = topUV[1] * OpenGLTextConv, Normal = topNormal },
                 new Vertex { Position = new Vector3(+w, +h, +d), UV = topUV[2] * OpenGLTextConv, Normal = topNormal },
                 new Vertex { Position = new Vector3(-w, +h, +d), UV = topUV[3] * OpenGLTextConv, Normal = topNormal },
 
-                // Bottom face
+                // Bottom face - 12
                 new Vertex { Position = new Vector3(-w, -h, +d), UV = bottomUV[0] * OpenGLTextConv, Normal = bottomNormal },
                 new Vertex { Position = new Vector3(+w, -h, +d), UV = bottomUV[1] * OpenGLTextConv, Normal = bottomNormal },
                 new Vertex { Position = new Vector3(+w, -h, -d), UV = bottomUV[2] * OpenGLTextConv, Normal = bottomNormal },
                 new Vertex { Position = new Vector3(-w, -h, -d), UV = bottomUV[3] * OpenGLTextConv, Normal = bottomNormal },
 
-                // Right face
+                // Right face - 16
                 new Vertex { Position = new Vector3(+w, -h, -d), UV = rightUV[0] * OpenGLTextConv, Normal = rightNormal },
                 new Vertex { Position = new Vector3(+w, -h, +d), UV = rightUV[1] * OpenGLTextConv, Normal = rightNormal },
                 new Vertex { Position = new Vector3(+w, +h, +d), UV = rightUV[2] * OpenGLTextConv, Normal = rightNormal },
                 new Vertex { Position = new Vector3(+w, +h, -d), UV = rightUV[3] * OpenGLTextConv, Normal = rightNormal },
 
-                // Left face
+                // Left face - 20
                 new Vertex { Position = new Vector3(-w, -h, +d), UV = leftUV[0] * OpenGLTextConv, Normal = leftNormal },
                 new Vertex { Position = new Vector3(-w, -h, -d), UV = leftUV[1] * OpenGLTextConv, Normal = leftNormal },
                 new Vertex { Position = new Vector3(-w, +h, -d), UV = leftUV[2] * OpenGLTextConv, Normal = leftNormal },

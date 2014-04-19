@@ -1,6 +1,7 @@
 ﻿using Jv.Games.DX.Test.Behaviors;
 using Jv.Games.DX.Test.Objects;
 using Mage;
+using SharpDX.Direct3D9;
 using System;
 
 namespace Jv.Games.DX.Test
@@ -11,17 +12,19 @@ namespace Jv.Games.DX.Test
 
         public void Setup(SharpDX.Direct3D9.Device device, GameWindow window)
         {
+            var marioTexture = Texture.FromFile(device, "Textures/new-mario.png");
+
             _scene = new Scene(device);
 
-            var obj = _scene.Add(new Block(device, 10, "block_solid", false) { new Rotating() });
+            var obj = _scene.Add(new Mario(device, marioTexture) { new Rotating() });
 
-            _scene.Add(new Water(device, 50, 50)).Translate(0, -10f, 0);
+            _scene.Add(new Water(device, 50, 50)).Translate(0, -5f, 0);
 
             var camera = new Camera { new LookAtObject(obj) };
             camera.Viewport = new SharpDX.Viewport(0, 0, window.Width, window.Height);
             camera.SetPerspective(60, window.Width / (float)window.Height, 1, 5000);
 
-            camera.Translate(0, 40, 1);
+            camera.Translate(0, 2, 10);
             _scene.Add(camera);
 
             _scene.Init();
