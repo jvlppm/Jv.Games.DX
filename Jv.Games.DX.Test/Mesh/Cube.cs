@@ -1,6 +1,7 @@
 ﻿using SharpDX;
 using SharpDX.Direct3D9;
 using System;
+using System.Linq;
 
 namespace Jv.Games.DX.Test.Mesh
 {
@@ -19,46 +20,49 @@ namespace Jv.Games.DX.Test.Mesh
                 leftUV == null || leftUV.Length != 4)
                 throw new ArgumentException("UV mappings must have 4 coordinates");
 
+            // Convert texture coordinates from OpenGL to DirectX
+            var OpenGLTextConv = new Vector2(1, -1);
+
             var w = width / 2;
             var h = height / 2;
             var d = depth / 2;
 
             VertexData = new[]{
                 // Front face
-                new TexVertex { Position = new Vector3(-w, -h, +d), UV = frontUV[0] },
-                new TexVertex { Position = new Vector3(+w, -h, +d), UV = frontUV[1] },
-                new TexVertex { Position = new Vector3(+w, +h, +d), UV = frontUV[2] },
-                new TexVertex { Position = new Vector3(-w, +h, +d), UV = frontUV[3] },
+                new TexVertex { Position = new Vector3(-w, -h, -d), UV = frontUV[0] * OpenGLTextConv },
+                new TexVertex { Position = new Vector3(+w, -h, -d), UV = frontUV[1] * OpenGLTextConv },
+                new TexVertex { Position = new Vector3(+w, +h, -d), UV = frontUV[2] * OpenGLTextConv },
+                new TexVertex { Position = new Vector3(-w, +h, -d), UV = frontUV[3] * OpenGLTextConv },
 
                 // Back face
-                new TexVertex { Position = new Vector3(+w, -h, -d), UV = backUV[0] },
-                new TexVertex { Position = new Vector3(-w, -h, -d), UV = backUV[1] },
-                new TexVertex { Position = new Vector3(-w, +h, -d), UV = backUV[2] },
-                new TexVertex { Position = new Vector3(+w, +h, -d), UV = backUV[3] },
+                new TexVertex { Position = new Vector3(+w, -h, +d), UV = backUV[0] * OpenGLTextConv },
+                new TexVertex { Position = new Vector3(-w, -h, +d), UV = backUV[1] * OpenGLTextConv },
+                new TexVertex { Position = new Vector3(-w, +h, +d), UV = backUV[2] * OpenGLTextConv },
+                new TexVertex { Position = new Vector3(+w, +h, +d), UV = backUV[3] * OpenGLTextConv },
 
                 // Top face
-                new TexVertex { Position = new Vector3(-w, +h, +d), UV = topUV[0] },
-                new TexVertex { Position = new Vector3(+w, +h, +d), UV = topUV[1] },
-                new TexVertex { Position = new Vector3(+w, +h, -d), UV = topUV[2] },
-                new TexVertex { Position = new Vector3(-w, +h, -d), UV = topUV[3] },
+                new TexVertex { Position = new Vector3(-w, +h, -d), UV = topUV[0] * OpenGLTextConv },
+                new TexVertex { Position = new Vector3(+w, +h, -d), UV = topUV[1] * OpenGLTextConv },
+                new TexVertex { Position = new Vector3(+w, +h, +d), UV = topUV[2] * OpenGLTextConv },
+                new TexVertex { Position = new Vector3(-w, +h, +d), UV = topUV[3] * OpenGLTextConv },
 
                 // Bottom face
-                new TexVertex { Position = new Vector3(-w, -h, -d), UV = bottomUV[0] },
-                new TexVertex { Position = new Vector3(+w, -h, -d), UV = bottomUV[1] },
-                new TexVertex { Position = new Vector3(+w, -h, +d), UV = bottomUV[2] },
-                new TexVertex { Position = new Vector3(-w, -h, +d), UV = bottomUV[3] },
+                new TexVertex { Position = new Vector3(-w, -h, +d), UV = bottomUV[0] * OpenGLTextConv },
+                new TexVertex { Position = new Vector3(+w, -h, +d), UV = bottomUV[1] * OpenGLTextConv },
+                new TexVertex { Position = new Vector3(+w, -h, -d), UV = bottomUV[2] * OpenGLTextConv },
+                new TexVertex { Position = new Vector3(-w, -h, -d), UV = bottomUV[3] * OpenGLTextConv },
 
                 // Right face
-                new TexVertex { Position = new Vector3(+w, -h, +d), UV = rightUV[0] },
-                new TexVertex { Position = new Vector3(+w, -h, -d), UV = rightUV[1] },
-                new TexVertex { Position = new Vector3(+w, +h, -d), UV = rightUV[2] },
-                new TexVertex { Position = new Vector3(+w, +h, +d), UV = rightUV[3] },
+                new TexVertex { Position = new Vector3(+w, -h, -d), UV = rightUV[0] * OpenGLTextConv },
+                new TexVertex { Position = new Vector3(+w, -h, +d), UV = rightUV[1] * OpenGLTextConv },
+                new TexVertex { Position = new Vector3(+w, +h, +d), UV = rightUV[2] * OpenGLTextConv },
+                new TexVertex { Position = new Vector3(+w, +h, -d), UV = rightUV[3] * OpenGLTextConv },
 
                 // Left face
-                new TexVertex { Position = new Vector3(-w, -h, -d), UV = leftUV[0] },
-                new TexVertex { Position = new Vector3(-w, -h, +d), UV = leftUV[1] },
-                new TexVertex { Position = new Vector3(-w, +h, +d), UV = leftUV[2] },
-                new TexVertex { Position = new Vector3(-w, +h, -d), UV = leftUV[3] },
+                new TexVertex { Position = new Vector3(-w, -h, +d), UV = leftUV[0] * OpenGLTextConv },
+                new TexVertex { Position = new Vector3(-w, -h, -d), UV = leftUV[1] * OpenGLTextConv },
+                new TexVertex { Position = new Vector3(-w, +h, -d), UV = leftUV[2] * OpenGLTextConv },
+                new TexVertex { Position = new Vector3(-w, +h, +d), UV = leftUV[3] * OpenGLTextConv },
             };
 
             IndexData = new ushort[]{

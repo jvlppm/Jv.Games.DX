@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Jv.Games.DX.Test.Objects
 {
-    class Water : Model<WaveMaterial>
+    class Water : Model
     {
         public Water(Device device, float width, float depth)
             : this(device, width, depth, (int)(depth / 2), (int)(width / 2))

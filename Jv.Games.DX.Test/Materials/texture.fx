@@ -11,47 +11,45 @@ uniform extern texture gTexture;
 // Estrutura
 struct OutputVS
 {
-    float4 pos : POSITION0;
-    float4 color : COLOR0;
+	float4 pos : POSITION0;
+	float2 textCoord : TEXCOORD0;
 };
 
-texture Tex;
-sampler Samp = sampler_state    //sampler for doing the texture-lookup
+sampler Samp = sampler_state       //sampler for doing the texture-lookup
 {
-    Texture = <gTexture>;       //apply a texture to the sampler
-    MipFilter = LINEAR;         //sampler states
-    MinFilter = LINEAR;
-    MagFilter = LINEAR;
+	Texture = < gTexture > ;       //apply a texture to the sampler
+	MipFilter = LINEAR;            //sampler states
+	MinFilter = LINEAR;
+	MagFilter = LINEAR;
 };
 
-OutputVS ColorVS(float3 posL : POSITION0, float4 texCoord : TEXCOORD0)
+OutputVS ColorVS(float3 posL : POSITION0, float2 texCoord : TEXCOORD0)
 {
-    OutputVS outVS = (OutputVS)0;
+	OutputVS outVS = (OutputVS)0;
+	outVS.textCoord = texCoord;
 
-    //Altera a cor de acordo com a altura
-    outVS.color = tex2D(Samp, texCoord);
+	//Transforma a posição
+	outVS.pos = mul(float4(posL, 1.0f), gWVP);
 
-    //Transforma a posição
-    outVS.pos = mul(float4(posL, 1.0f), gWVP);
-
-    return outVS;
+	return outVS;
 }
 
 //Retorna a cor alterada
-float4 ColorPS(float4 inColor : COLOR0) : COLOR
+float4 ColorPS(float2 texCoord : TEXCOORD0) : COLOR
 {
-    return inColor;
+	//Altera a cor de acordo com a altura
+	return tex2D(Samp, texCoord);
 }
 
 technique TransformTech
 {
-    pass P0
-    {
-        // Especifica o vertex e pixel shader associado a essa passada.            
-        vertexShader = compile vs_2_0 ColorVS();
-        pixelShader = compile ps_2_0 ColorPS();
+	pass P0
+	{
+		// Especifica o vertex e pixel shader associado a essa passada.            
+		vertexShader = compile vs_2_0 ColorVS();
+		pixelShader = compile ps_2_0 ColorPS();
 
-        //Especifica o device state associado a essa passada.
-        FillMode = Solid;
-    }
+		//Especifica o device state associado a essa passada.
+		FillMode = Solid;
+	}
 }

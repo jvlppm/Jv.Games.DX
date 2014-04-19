@@ -2,12 +2,11 @@
 
 namespace Jv.Games.DX.Test.Objects
 {
-    class Model<T> : GameObject
-        where T : Material
+    class Model : GameObject
     {
-        public readonly T Material;
+        public readonly Material Material;
 
-        public Model(IMesh mesh, T material)
+        public Model(IMesh mesh, Material material)
         {
             Material = material;
             this.Attach(new MeshRenderer { Mesh = mesh, Material = material });

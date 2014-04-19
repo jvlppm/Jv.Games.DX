@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviors\Rotating.cs" />
     <Compile Include="Behaviors\LookAtObject.cs" />
     <Compile Include="Materials\TextureMaterial.cs" />
     <Compile Include="Materials\WaveMaterial.cs" />
@@ -81,6 +82,9 @@
     <Content Include="Materials\wave.fx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Textures\block_solid.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

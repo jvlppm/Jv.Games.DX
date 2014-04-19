@@ -1,4 +1,5 @@
 ﻿using Jv.Games.DX.Test.Behaviors;
+using Jv.Games.DX.Test.Materials;
 using Jv.Games.DX.Test.Mesh;
 using Jv.Games.DX.Test.Objects;
 using Mage;
@@ -19,15 +20,19 @@ namespace Jv.Games.DX.Test
 
         public void Setup(SharpDX.Direct3D9.Device device, GameWindow window)
         {
+            var texture = Texture.FromFile(device, "Textures/block_solid.png");
+            var uv = new[] { new Vector2(0, 0), new Vector2(1, 0), new Vector2(1, 1), new Vector2(0, 1) };
+
             this.window = window;
             scene = new Scene(device);
-            var water = scene.Add(new Water(device, 50, 5));
+            var obj = scene.Add(new Model(new TexturedCube(device, 5, 5, 5, uv, uv, uv, uv, uv, uv), new TextureMaterial { Texture = texture }));
+            obj.Attach(new Rotating());
 
             var camera = scene.Add(new Camera());
             camera.Viewport = new SharpDX.Viewport(0, 0, window.Width, window.Height);
             camera.SetPerspective(60, window.Width / (float)window.Height, 1, 5000);
-            camera.Attach(new LookAtObject(water));
-            camera.Transform = camera.Transform * SharpDX.Matrix.Translation(new SharpDX.Vector3(0, 30, 50));
+            camera.Attach(new LookAtObject(obj));
+            camera.Transform = camera.Transform * SharpDX.Matrix.Translation(new SharpDX.Vector3(0, 3, 10));
 
             scene.Init();
         }
