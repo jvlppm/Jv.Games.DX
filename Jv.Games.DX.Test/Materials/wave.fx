@@ -17,8 +17,8 @@ uniform extern float3 gSource;
 // Estrutura
 struct OutputVS
 {
-      float4 posH : POSITION0;
-	  float4 color : COLOR0;
+	float4 posH : POSITION0;
+	float4 color : COLOR0;
 };
 
 // Amplitude
@@ -40,42 +40,47 @@ float RadialWaves(float3 position)
 }
 
 float4 GetIntensityFromHeight(float y)
-{	
+{
 	float c = y / (2.0f*a) + 0.5f;
 	return float4(c, c, c, 1.0f) * 0.5f + 0.5f;
 }
 
 OutputVS ColorVS(float3 posL : POSITION0, float4 color : COLOR0)
 {
-      OutputVS outVS = (OutputVS)0;
+	OutputVS outVS = (OutputVS)0;
 
-	  //Altera a posição y de acordo com a onda.
-	  float newY = RadialWaves(posL);
-	  posL.y = newY + posL.y;
+	//Altera a posição y de acordo com a onda.
+	float newY = RadialWaves(posL);
+	posL.y = newY + posL.y;
 
-	  //Altera a cor de acordo com a altura
-      outVS.color = color * GetIntensityFromHeight(newY);
+	//Altera a cor de acordo com a altura
+	outVS.color = color * GetIntensityFromHeight(newY);
 
-	  //Transforma a posição
-      outVS.posH = mul(float4(posL, 1.0f), gWVP);      
-      return outVS;
+	//Transforma a posição
+	outVS.posH = mul(float4(posL, 1.0f), gWVP);
+	return outVS;
 }
 
 //Retorna a cor alterada
 float4 ColorPS(float4 inColor : COLOR0) : COLOR
-{	
-    return inColor;
+{
+	return inColor;
 }
 
 technique TransformTech
 {
-      pass P0
-      {
-            // Especifica o vertex e pixel shader associado a essa passada.            
-            vertexShader = compile vs_2_0 ColorVS();
-            pixelShader  = compile ps_2_0 ColorPS();
+	pass P0
+	{
+		AlphaBlendEnable = true;
+		SrcBlend = SrcAlpha;
+		DestBlend = InvSrcAlpha;
+		BlendOp = Add;
 
-            //Especifica o device state associado a essa passada.
-            FillMode = Solid;
-      }
+		// Especifica o vertex e pixel shader associado a essa passada.            
+		vertexShader = compile vs_2_0 ColorVS();
+		pixelShader = compile ps_2_0 ColorPS();
+
+		//Especifica o device state associado a essa passada.
+		FillMode = Solid;
+	}
 }

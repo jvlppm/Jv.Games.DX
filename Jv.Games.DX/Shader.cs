@@ -14,14 +14,17 @@ namespace Jv.Games.DX
 
         public readonly string Effect;
         public readonly string Technique;
+
+        public readonly bool SortRendering;
         Effect _shader;
 
         Dictionary<EffectHandle, Uniform> Uniforms;
 
-        public Material(string effect, string technique)
+        public Material(string effect, string technique, bool sortRendering)
         {
             Effect = effect;
             Technique = technique;
+            SortRendering = sortRendering;
             Uniforms = new Dictionary<EffectHandle, Uniform>();
         }
 

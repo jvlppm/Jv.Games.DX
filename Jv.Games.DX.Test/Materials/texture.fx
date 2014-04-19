@@ -45,6 +45,11 @@ technique TransformTech
 {
 	pass P0
 	{
+		AlphaBlendEnable = true;
+		SrcBlend = SrcAlpha;
+		DestBlend = InvSrcAlpha;
+		BlendOp = Add;
+
 		// Especifica o vertex e pixel shader associado a essa passada.            
 		vertexShader = compile vs_2_0 ColorVS();
 		pixelShader = compile ps_2_0 ColorPS();

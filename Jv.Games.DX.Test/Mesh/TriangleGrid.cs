@@ -35,7 +35,7 @@ namespace Jv.Games.DX.Test.Mesh
                         j * dx + px,
                         0.0f,
                         -i * dz + pz,
-                        0.4f, 0.4f, 1.0f));
+                        0.4f, 0.4f, 1.0f, 1f));
                     ++k;
                 }
 

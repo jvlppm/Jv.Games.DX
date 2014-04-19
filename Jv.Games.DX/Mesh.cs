@@ -6,8 +6,8 @@ namespace Jv.Games.DX
 {
     public interface IMesh
     {
-        SharpDX.Direct3D9.VertexBuffer Vertex { get; }
-        SharpDX.Direct3D9.IndexBuffer Index { get; }
+        SharpDX.Direct3D9.VertexBuffer VertexBuffer { get; }
+        SharpDX.Direct3D9.IndexBuffer IndexBuffer { get; }
         int NumVertices { get; }
         int NumPrimitives { get; }
         SharpDX.Direct3D9.PrimitiveType PrimitiveType { get; }
@@ -18,8 +18,8 @@ namespace Jv.Games.DX
     public class Mesh<DataType> : IMesh
         where DataType : struct
     {
-        public SharpDX.Direct3D9.VertexBuffer Vertex { get; private set; }
-        public SharpDX.Direct3D9.IndexBuffer Index { get; private set; }
+        public SharpDX.Direct3D9.VertexBuffer VertexBuffer { get; private set; }
+        public SharpDX.Direct3D9.IndexBuffer IndexBuffer { get; private set; }
         public int NumVertices { get; private set; }
         public int NumPrimitives { get; private set; }
         public SharpDX.Direct3D9.PrimitiveType PrimitiveType { get; private set; }
@@ -40,8 +40,8 @@ namespace Jv.Games.DX
         {
             set
             {
-                Vertex = new SharpDX.Direct3D9.VertexBuffer(_device, Marshal.SizeOf(typeof(DataType)) * value.Length, Usage.None, VertexFormat.None, Pool.Managed);
-                using (var stream = Vertex.LockData())
+                VertexBuffer = new SharpDX.Direct3D9.VertexBuffer(_device, Marshal.SizeOf(typeof(DataType)) * value.Length, Usage.None, VertexFormat.None, Pool.Managed);
+                using (var stream = VertexBuffer.LockData())
                     stream.Data.WriteRange(value);
                 NumVertices = value.Length;
             }
@@ -51,8 +51,8 @@ namespace Jv.Games.DX
         {
             set
             {
-                Index = new SharpDX.Direct3D9.IndexBuffer(_device, sizeof(ushort) * value.Length, Usage.None, Pool.Managed, true);
-                using (var stream = Index.LockData())
+                IndexBuffer = new SharpDX.Direct3D9.IndexBuffer(_device, sizeof(ushort) * value.Length, Usage.None, Pool.Managed, true);
+                using (var stream = IndexBuffer.LockData())
                     stream.Data.WriteRange(value);
 
                 switch (PrimitiveType)

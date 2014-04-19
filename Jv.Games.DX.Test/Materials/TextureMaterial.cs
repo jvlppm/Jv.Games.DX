@@ -15,8 +15,8 @@ namespace Jv.Games.DX.Test.Materials
             set { _texture = value; SetTexture(_gTexture, value); }
         }
 
-        public TextureMaterial(Texture texture)
-            : base("Materials/texture.fx", "TransformTech")
+        public TextureMaterial(Texture texture, bool containsTransparency)
+            : base("Materials/texture.fx", "TransformTech", containsTransparency)
         {
             Texture = texture;
         }

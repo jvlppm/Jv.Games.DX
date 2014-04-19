@@ -8,11 +8,21 @@ namespace Jv.Games.DX
 {
     public class Scene : GameObject
     {
+        struct RenderInfo
+        {
+            public GameObject Object;
+            public EffectHandle WVPHandle;
+            public MeshRenderer Renderer;
+            public Effect Effect;
+            public EffectHandle Technique;
+        }
+
         readonly Device _device;
         List<IUpdateable> Updateables;
         List<Camera> Cameras;
         Dictionary<string, Effect> ShadersByName;
         Dictionary<Effect, Dictionary<EffectHandle, List<MeshRenderer>>> RenderersByTechnique;
+        List<RenderInfo> SortedRendereres;
 
         public Scene(Device device)
         {
@@ -21,6 +31,7 @@ namespace Jv.Games.DX
             Updateables = new List<IUpdateable>();
             ShadersByName = new Dictionary<string, Effect>();
             RenderersByTechnique = new Dictionary<Effect, Dictionary<EffectHandle, List<MeshRenderer>>>();
+            SortedRendereres = new List<RenderInfo>();
         }
 
         #region Register
@@ -33,7 +44,7 @@ namespace Jv.Games.DX
                 disposables.Add(RegisterCamera(camera));
 
             var renderer = item as MeshRenderer;
-            if(renderer != null)
+            if (renderer != null)
                 disposables.Add(RegisterRenderer(renderer));
 
             var updateable = item as IUpdateable;
@@ -66,6 +77,14 @@ namespace Jv.Games.DX
 
             var technique = shader.GetTechnique(renderer.Material.Technique);
 
+            if (renderer.Material.SortRendering)
+            {
+                var gWVP = shader.GetParameter(null, "gWVP");
+                var renderInfo = new RenderInfo { Object = renderer.Object, Effect = shader, Technique = technique, Renderer = renderer, WVPHandle = gWVP };
+                SortedRendereres.Add(renderInfo);
+                return Disposable.Create(() => SortedRendereres.Remove(renderInfo));
+            }
+
             if (!RenderersByTechnique.ContainsKey(shader))
                 RenderersByTechnique[shader] = new Dictionary<EffectHandle, List<MeshRenderer>>();
 
@@ -92,6 +111,9 @@ namespace Jv.Games.DX
                                  from r in kvT.Value
                                  select new { Renderer = r, Shader = kvS.Key })
                 item.Renderer.Material.Init(item.Shader);
+
+            foreach (var item in SortedRendereres)
+                item.Renderer.Material.Init(item.Effect);
         }
 
         public void Update(TimeSpan deltaTime)
@@ -129,8 +151,8 @@ namespace Jv.Games.DX
                             shader.SetValue(wvpHandler, mvp);
 
                             _device.VertexDeclaration = renderer.Mesh.VertexDeclaration;
-                            _device.SetStreamSource(0, renderer.Mesh.Vertex, 0, renderer.Mesh.VertexSize);
-                            _device.Indices = renderer.Mesh.Index;
+                            _device.SetStreamSource(0, renderer.Mesh.VertexBuffer, 0, renderer.Mesh.VertexSize);
+                            _device.Indices = renderer.Mesh.IndexBuffer;
 
                             renderer.Material.SetValues();
 
@@ -144,6 +166,29 @@ namespace Jv.Games.DX
                             shader.End();
                         }
                     }
+                }
+
+                foreach (var renderInfo in SortedRendereres.OrderByDescending(o => (o.Object.GlobalTransform.TranslationVector - cam.GlobalTransform.TranslationVector).LengthSquared()))
+                {
+                    var mvp = renderInfo.Object.GlobalTransform * vp;
+                    renderInfo.Effect.SetValue(renderInfo.WVPHandle, mvp);
+
+                    var mesh = renderInfo.Renderer.Mesh;
+
+                    _device.VertexDeclaration = mesh.VertexDeclaration;
+                    _device.SetStreamSource(0, mesh.VertexBuffer, 0, mesh.VertexSize);
+                    _device.Indices = mesh.IndexBuffer;
+
+                    renderInfo.Renderer.Material.SetValues();
+
+                    var passes = renderInfo.Effect.Begin();
+                    for (var pass = 0; pass < passes; pass++)
+                    {
+                        renderInfo.Effect.BeginPass(pass);
+                        _device.DrawIndexedPrimitive(mesh.PrimitiveType, 0, 0, mesh.NumVertices, 0, mesh.NumPrimitives);
+                        renderInfo.Effect.EndPass();
+                    }
+                    renderInfo.Effect.End();
                 }
             }
             _device.EndScene();

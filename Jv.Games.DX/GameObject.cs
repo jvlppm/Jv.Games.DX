@@ -1,10 +1,11 @@
 ﻿using SharpDX;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Jv.Games.DX
 {
-    public class GameObject : IDisposable
+    public class GameObject : IDisposable, IEnumerable
     {
         #region Attributes
         Matrix _transform;
@@ -52,15 +53,14 @@ namespace Jv.Games.DX
             _children.ForEach(c => c.ClearGlobalTransform());
         }
 
-        public void Translate(int x, int y, int z)
+        public void Translate(float x, float y, float z)
         {
             Transform = _transform * Matrix.Translation(new Vector3(x, y, z));
         }
         #endregion
 
         #region Hierarchy
-        public virtual T Add<T>(T gameObject)
-            where T : GameObject
+        public virtual GameObject Add(GameObject gameObject)
         {
             if (_disposed)
                 throw new ObjectDisposedException(GetType().FullName);
@@ -73,7 +73,7 @@ namespace Jv.Games.DX
             return gameObject;
         }
 
-        public GameObject Attach(Components.Component component)
+        public GameObject Add(Components.Component component)
         {
             if (_disposed)
                 throw new ObjectDisposedException(GetType().FullName);
@@ -150,5 +150,13 @@ namespace Jv.Games.DX
             }
         }
         #endregion
+
+        public IEnumerator GetEnumerator()
+        {
+            foreach (var cmp in _components)
+                yield return cmp;
+            foreach (var child in _children)
+                yield return child;
+        }
     }
 }

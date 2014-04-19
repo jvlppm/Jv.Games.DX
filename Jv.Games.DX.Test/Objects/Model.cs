@@ -9,7 +9,7 @@ namespace Jv.Games.DX.Test.Objects
         public Model(IMesh mesh, Material material)
         {
             Material = material;
-            this.Attach(new MeshRenderer { Mesh = mesh, Material = material });
+            this.Add(new MeshRenderer { Mesh = mesh, Material = material });
         }
     }
 }

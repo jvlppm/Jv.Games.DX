@@ -23,7 +23,7 @@ namespace Jv.Games.DX.Test.Materials
         }
 
         public WaveMaterial()
-            : base("Materials/wave.fx", "TransformTech")
+            : base("Materials/wave.fx", "TransformTech", sortRendering: true)
         {
         }
 
