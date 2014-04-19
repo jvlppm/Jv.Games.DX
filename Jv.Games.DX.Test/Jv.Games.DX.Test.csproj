@@ -60,6 +60,7 @@
     <Compile Include="Mesh\TriangleGrid.cs" />
     <Compile Include="MyGame.cs" />
     <Compile Include="Mesh\Cube.cs" />
+    <Compile Include="Objects\Block.cs" />
     <Compile Include="Objects\Water.cs" />
     <Compile Include="Objects\Model.cs" />
     <Compile Include="Program.cs" />

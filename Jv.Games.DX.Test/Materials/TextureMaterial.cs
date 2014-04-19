@@ -15,9 +15,10 @@ namespace Jv.Games.DX.Test.Materials
             set { _texture = value; SetTexture(_gTexture, value); }
         }
 
-        public TextureMaterial()
+        public TextureMaterial(Texture texture)
             : base("Materials/texture.fx", "TransformTech")
         {
+            Texture = texture;
         }
 
         public override void Init(Effect effect)
