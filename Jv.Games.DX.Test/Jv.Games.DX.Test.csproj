@@ -52,8 +52,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\LookAtObject.cs" />
-    <Compile Include="Materials\BaseMaterial.cs" />
+    <Compile Include="Materials\TextureMaterial.cs" />
     <Compile Include="Materials\WaveMaterial.cs" />
+    <Compile Include="Mesh\Vertex.cs" />
     <Compile Include="Mesh\SimpleVertex.cs" />
     <Compile Include="Mesh\TriangleGrid.cs" />
     <Compile Include="MyGame.cs" />
@@ -74,6 +75,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Materials\texture.fx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Materials\wave.fx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

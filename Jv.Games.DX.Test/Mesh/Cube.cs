@@ -1,58 +1,64 @@
-﻿using Jv.Games.DX.Test.Mesh;
+﻿using SharpDX;
 using SharpDX.Direct3D9;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jv.Games.DX.Test.Mesh
 {
-    class Cube : Mesh<SimpleVertex>
+    class TexturedCube : Mesh<TexVertex>
     {
-        public Cube(Device device, float width, float height, float depth)
-            : base(device, PrimitiveType.TriangleList, SimpleVertex.GetDeclaration(device))
+        public TexturedCube(Device device, float width, float height, float depth,
+            Vector2[] frontUV, Vector2[] backUV, Vector2[] topUV, Vector2[] bottomUV, Vector2[] leftUV, Vector2[] rightUV)
+
+            : base(device, PrimitiveType.TriangleList, TexVertex.GetDeclaration(device))
         {
+            if (frontUV == null || frontUV.Length != 4 ||
+                backUV == null || backUV.Length != 4 ||
+                topUV == null || topUV.Length != 4 ||
+                bottomUV == null || bottomUV.Length != 4 ||
+                rightUV == null || rightUV.Length != 4 ||
+                leftUV == null || leftUV.Length != 4)
+                throw new ArgumentException("UV mappings must have 4 coordinates");
+
             var w = width / 2;
             var h = height / 2;
             var d = depth / 2;
 
             VertexData = new[]{
                 // Front face
-                new SimpleVertex(-w, -h, d, 0, 0, 1),
-                new SimpleVertex(w, -h, d, 1, 0, 1),
-                new SimpleVertex( w, h, d, 1, 1, 1),
-                new SimpleVertex(-w, h, d, 0, 1, 1),
+                new TexVertex { Position = new Vector3(-w, -h, +d), UV = frontUV[0] },
+                new TexVertex { Position = new Vector3(+w, -h, +d), UV = frontUV[1] },
+                new TexVertex { Position = new Vector3(+w, +h, +d), UV = frontUV[2] },
+                new TexVertex { Position = new Vector3(-w, +h, +d), UV = frontUV[3] },
 
                 // Back face
-                new SimpleVertex(w, -h, -d, 1, 0, 0),
-                new SimpleVertex(-w, -h, -d, 0, 0, 0),
-                new SimpleVertex(-w, h, -d, 0, 1, 0),
-                new SimpleVertex(w, h, -d, 1, 1, 0),
+                new TexVertex { Position = new Vector3(+w, -h, -d), UV = backUV[0] },
+                new TexVertex { Position = new Vector3(-w, -h, -d), UV = backUV[1] },
+                new TexVertex { Position = new Vector3(-w, +h, -d), UV = backUV[2] },
+                new TexVertex { Position = new Vector3(+w, +h, -d), UV = backUV[3] },
 
                 // Top face
-                new SimpleVertex(-w, h, d, 0, 1, 1),
-                new SimpleVertex(w, h, d, 1, 1, 1),
-                new SimpleVertex(w, h, -d, 1, 1, 0),
-                new SimpleVertex(-w, h, -d, 0, 1, 0),
+                new TexVertex { Position = new Vector3(-w, +h, +d), UV = topUV[0] },
+                new TexVertex { Position = new Vector3(+w, +h, +d), UV = topUV[1] },
+                new TexVertex { Position = new Vector3(+w, +h, -d), UV = topUV[2] },
+                new TexVertex { Position = new Vector3(-w, +h, -d), UV = topUV[3] },
 
                 // Bottom face
-                new SimpleVertex(-w, -h, -d, 0, 0, 0),
-                new SimpleVertex(w, -h, -d, 1, 0, 0),
-                new SimpleVertex(w, -h, d, 1, 0, 1),
-                new SimpleVertex(-w, -h, d, 0, 0, 1),
+                new TexVertex { Position = new Vector3(-w, -h, -d), UV = bottomUV[0] },
+                new TexVertex { Position = new Vector3(+w, -h, -d), UV = bottomUV[1] },
+                new TexVertex { Position = new Vector3(+w, -h, +d), UV = bottomUV[2] },
+                new TexVertex { Position = new Vector3(-w, -h, +d), UV = bottomUV[3] },
 
                 // Right face
-                new SimpleVertex(w, -h, d, 1, 0, 1),
-                new SimpleVertex(w, -h, -d, 1, 0, 0),
-                new SimpleVertex(w, h, -d, 1, 1, 0),
-                new SimpleVertex(w, h, d, 1, 1, 1),
+                new TexVertex { Position = new Vector3(+w, -h, +d), UV = rightUV[0] },
+                new TexVertex { Position = new Vector3(+w, -h, -d), UV = rightUV[1] },
+                new TexVertex { Position = new Vector3(+w, +h, -d), UV = rightUV[2] },
+                new TexVertex { Position = new Vector3(+w, +h, +d), UV = rightUV[3] },
 
                 // Left face
-                new SimpleVertex(-w, -h, -d, 0, 0, 0),
-                new SimpleVertex(-w, -h, d, 0, 0, 1),
-                new SimpleVertex(-w, h, d, 0, 1, 0),
-                new SimpleVertex(-w, h, -d, 0, 1, 0),
+                new TexVertex { Position = new Vector3(-w, -h, -d), UV = leftUV[0] },
+                new TexVertex { Position = new Vector3(-w, -h, +d), UV = leftUV[1] },
+                new TexVertex { Position = new Vector3(-w, +h, +d), UV = leftUV[2] },
+                new TexVertex { Position = new Vector3(-w, +h, -d), UV = leftUV[3] },
             };
 
             IndexData = new ushort[]{

@@ -4,7 +4,7 @@ using System;
 
 namespace Jv.Games.DX.Test.Materials
 {
-    class WaveMaterial : Material
+    class WaveMaterial : Material, IUpdateable
     {
         EffectHandle _gTime, _gSource;
         TimeSpan _time;
@@ -37,10 +37,9 @@ namespace Jv.Games.DX.Test.Materials
             base.Init(effect);
         }
 
-        public override void Update(TimeSpan deltaTime)
+        public void Update(TimeSpan deltaTime)
         {
             Time += deltaTime;
-            base.Update(deltaTime);
         }
     }
 }

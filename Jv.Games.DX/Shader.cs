@@ -36,11 +36,21 @@ namespace Jv.Games.DX
             };
         }
 
+        protected void SetTexture(EffectHandle handle, Texture value)
+        {
+            if (handle == null)
+                return;
+            Uniforms[handle] = new Uniform
+            {
+                Handle = handle,
+                SetValue = e => e.SetTexture(handle, value)
+            };
+        }
+
         public virtual void Init(Effect shader)
         {
             _shader = shader;
         }
-        public virtual void Update(TimeSpan gameTime) { }
 
         public void SetValues()
         {
