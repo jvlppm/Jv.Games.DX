@@ -63,13 +63,19 @@ namespace Jv.Games.DX.Test
             var y = mapContent.Length;
             foreach (var line in mapContent)
             {
-                for (int x = 0; x < line.Length; x++)
+                int xOffset = 0;
+                for (int x = 0; x - xOffset < line.Length; x++)
                 {
-                    var c = line[x];
+                    var c = line[x - xOffset];
                     string blockTexture = null;
 
                     switch (c)
                     {
+                        case '\t':
+                            x += 3;
+                            xOffset += 3;
+                            break;
+
                         case 'M':
                             if (_player == null || _oldStartPos != new Vector2(x, y))
                             {
