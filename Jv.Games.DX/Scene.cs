@@ -1,4 +1,5 @@
 ﻿using Jv.Games.DX.Components;
+using SharpDX;
 using SharpDX.Direct3D9;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,8 @@ namespace Jv.Games.DX
 {
     public class Scene : GameObject
     {
+        public Color ClearColor = new Color(0, 0, 0);
+
         struct RenderInfo
         {
             public GameObject Object;
@@ -124,7 +127,7 @@ namespace Jv.Games.DX
 
         public void Draw()
         {
-            _device.Clear(SharpDX.Direct3D9.ClearFlags.Target | SharpDX.Direct3D9.ClearFlags.ZBuffer, new SharpDX.Color(0, 0, 0), 1.0f, 0);
+            _device.Clear(SharpDX.Direct3D9.ClearFlags.Target | SharpDX.Direct3D9.ClearFlags.ZBuffer, ClearColor, 1.0f, 0);
             _device.BeginScene();
 
             foreach (var cam in Cameras)

@@ -35,8 +35,9 @@ namespace Jv.Games.DX.Test.Objects
         GameObject _sizeContainer;
         //bool _small;
 
-        public Mario(Device device, Texture texture)
+        public Mario(Device device)
         {
+            var texture = Texture.FromFile(device, "Assets/Textures/new-mario.png");
             CreateBody(device, texture);
         }
 

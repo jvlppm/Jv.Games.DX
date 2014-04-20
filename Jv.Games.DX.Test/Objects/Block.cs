@@ -19,7 +19,7 @@ namespace Jv.Games.DX.Test.Objects
         static Vector2[] DefaultUV = new[] { new Vector2(0, 0), new Vector2(1, 0), new Vector2(1, 1), new Vector2(0, 1) };
 
         public Block(Device device, float size, string type, bool containsTransparency = false)
-            : this(device, size, Texture.FromFile(device, Directory.GetFiles("Textures", "block_" + type + ".*").First()), containsTransparency, DefaultUV, DefaultUV, DefaultUV, DefaultUV, DefaultUV, DefaultUV)
+            : this(device, size, Texture.FromFile(device, Directory.GetFiles("Assets/Textures", "block_" + type + ".*").First()), containsTransparency, DefaultUV, DefaultUV, DefaultUV, DefaultUV, DefaultUV, DefaultUV)
         {
         }
 

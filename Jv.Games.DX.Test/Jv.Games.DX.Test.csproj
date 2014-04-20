@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Behaviors\Rotating.cs" />
     <Compile Include="Behaviors\LookAtObject.cs" />
+    <Compile Include="Level.cs" />
     <Compile Include="Materials\TextureMaterial.cs" />
     <Compile Include="Materials\WaveMaterial.cs" />
     <Compile Include="Mesh\MarioHead.cs" />
@@ -79,19 +80,26 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Maps\Level1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\Textures\block_floor.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="Materials\texture.fx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Materials\wave.fx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Textures\new-mario.png">
+    <None Include="Assets\Textures\new-mario.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Textures\block_solid.png">
+    <None Include="Assets\Textures\block_solid.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
