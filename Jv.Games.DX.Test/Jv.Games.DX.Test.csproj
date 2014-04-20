@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviors\Mover.cs" />
     <Compile Include="Behaviors\Rotating.cs" />
     <Compile Include="Behaviors\LookAtObject.cs" />
     <Compile Include="Level.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="Objects\Model.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TextureInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

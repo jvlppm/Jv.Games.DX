@@ -1,4 +1,5 @@
-﻿using Jv.Games.DX.Test.Behaviors;
+﻿using Jv.Games.DX.Components;
+using Jv.Games.DX.Test.Behaviors;
 using Jv.Games.DX.Test.Objects;
 using Mage;
 using SharpDX;
@@ -14,6 +15,10 @@ namespace Jv.Games.DX.Test
 {
     class Level : Scene
     {
+        static TimeSpan MaxFrameDelay = TimeSpan.FromSeconds(1 / 8.0f);
+
+        Vector2 _oldStartPos;
+
         GameObject _player;
         GameObject _map;
         DateTime _mapModifyDate;
@@ -42,6 +47,12 @@ namespace Jv.Games.DX.Test
             }
         }
 
+        public override void Init()
+        {
+            RigidBody.MeterSize = 8;
+            base.Init();
+        }
+
         void ReloadScene(Device device)
         {
             string[] mapContent = File.ReadAllLines(_mapFile);
@@ -60,11 +71,17 @@ namespace Jv.Games.DX.Test
                     switch (c)
                     {
                         case 'M':
-                            if (_player == null)
+                            if (_player == null || _oldStartPos != new Vector2(x, y))
                             {
-                                _player = Add(new Mario(device));
-                                _player.Transform *= Matrix.RotationY(MathUtil.DegreesToRadians(-90))
-                                                  * Matrix.Translation(x, y + 0.5f, 0);
+                                if (_player == null)
+                                {
+                                    _player = Add(new Mario(device));
+                                    _player.Transform *= Matrix.RotationY(MathUtil.DegreesToRadians(-90))
+                                                      * Matrix.Translation(x, y + 0.5f, 0);
+                                }
+                                else _player.Transform = Matrix.Translation(x, y + 0.5f, 0);
+
+                                _oldStartPos = new Vector2(x, y);
                             }
                             break;
 
@@ -96,8 +113,7 @@ namespace Jv.Games.DX.Test
 
                     if (blockTexture != null)
                     {
-                        _map.Add(new Block(device, blockTexture)).Translate(x, y, -0.5f);
-                        _map.Add(new Block(device, blockTexture)).Translate(x, y, +0.5f);
+                        _map.Add(new Block(device, 1, 1, 2, blockTexture)).Translate(x, y, 0);
                     }
                 }
 
@@ -115,6 +131,9 @@ namespace Jv.Games.DX.Test
                 _mapModifyDate = fileDate;
                 _map.Init();
             }
+
+            if (deltaTime > MaxFrameDelay)
+                deltaTime = MaxFrameDelay;
 
             base.Update(device, deltaTime);
         }

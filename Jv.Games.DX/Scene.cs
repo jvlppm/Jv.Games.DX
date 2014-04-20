@@ -23,9 +23,12 @@ namespace Jv.Games.DX
         readonly Device _device;
         List<IUpdateable> Updateables;
         List<Camera> Cameras;
+        List<Collider> _colliders;
         Dictionary<string, Effect> ShadersByName;
         Dictionary<string, Dictionary<string, List<RenderInfo>>> RenderersByTechnique;
         List<RenderInfo> SortedRendereres;
+
+        public IEnumerable<Collider> Colliders { get { return _colliders; } }
 
         public Scene(Device device)
         {
@@ -35,6 +38,7 @@ namespace Jv.Games.DX
             ShadersByName = new Dictionary<string, Effect>();
             RenderersByTechnique = new Dictionary<string, Dictionary<string, List<RenderInfo>>>();
             SortedRendereres = new List<RenderInfo>();
+            _colliders = new List<Collider>();
         }
 
         #region Register
@@ -54,10 +58,20 @@ namespace Jv.Games.DX
             if (updateable != null)
                 disposables.Add(RegisterUpdateable(updateable));
 
+            var collider = item as Collider;
+            if (collider != null)
+                disposables.Add(RegisterCollider(collider));
+
             if (disposables.Count <= 0)
                 return Disposable.Empty;
 
             return Disposable.Create(() => disposables.ForEach(d => d.Dispose()));
+        }
+
+        IDisposable RegisterCollider(Collider collider)
+        {
+            _colliders.Add(collider);
+            return Disposable.Create(() => _colliders.Remove(collider));
         }
 
         IDisposable RegisterUpdateable(IUpdateable updateable)

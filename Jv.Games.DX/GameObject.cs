@@ -1,5 +1,6 @@
 ﻿using SharpDX;
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -92,7 +93,7 @@ namespace Jv.Games.DX
         {
             _components.Remove(component);
         }
-        
+
         public T GetParent<T>()
             where T : GameObject
         {
@@ -161,6 +162,62 @@ namespace Jv.Games.DX
                 yield return cmp;
             foreach (var child in _children)
                 yield return child;
+        }
+
+        public T SearchComponent<T>(List<GameObject> ignoreObjects = null) where T : Components.Component
+        {
+            var toProcess = new Queue<GameObject>();
+            toProcess.Enqueue(this);
+
+            ignoreObjects = ignoreObjects ?? new List<GameObject>();
+            GameObject current;
+
+            while (toProcess.Count > 0)
+            {
+                current = toProcess.Dequeue();
+
+                if (ignoreObjects.Contains(current))
+                    continue;
+                ignoreObjects.Add(current);
+
+                var found = current._components.OfType<T>().FirstOrDefault();
+
+                if (found != null)
+                    return found;
+
+                foreach (var c in current._children)
+                    toProcess.Enqueue(c);
+            }
+
+            current = this;
+            while (current.Parent != null)
+            {
+                current = current.Parent;
+
+                var found = current._components.OfType<T>().FirstOrDefault();
+
+                if (found != null)
+                    return found;
+            }
+
+            return null;
+        }
+
+        public void SendMessage(string message, bool recursively, params object[] args)
+        {
+            var m = GetType().GetMethod(message, args.Select(a => a.GetType()).ToArray());
+            if(m != null)
+                m.Invoke(this, args);
+
+            foreach(var c in _components)
+            {
+                m = c.GetType().GetMethod(message, args.Select(a => a.GetType()).ToArray());
+                if(m != null)
+                    m.Invoke(c, args);
+            }
+
+            if (recursively)
+                _children.ForEach(c => c.SendMessage(message, recursively, args));
         }
     }
 }

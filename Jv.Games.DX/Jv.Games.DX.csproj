@@ -50,8 +50,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
+    <Compile Include="Components\Collider.cs" />
     <Compile Include="Components\Component.cs" />
     <Compile Include="Components\MeshRenderer.cs" />
+    <Compile Include="Components\RigidBody.cs" />
     <Compile Include="Disposable.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="GameObject.cs" />

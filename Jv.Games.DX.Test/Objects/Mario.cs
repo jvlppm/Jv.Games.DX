@@ -1,4 +1,5 @@
 ﻿using Jv.Games.DX.Components;
+using Jv.Games.DX.Test.Behaviors;
 using Jv.Games.DX.Test.Materials;
 using Jv.Games.DX.Test.Mesh;
 using SharpDX;
@@ -31,14 +32,44 @@ namespace Jv.Games.DX.Test.Objects
 
         static Vector2[] CapUV = new[] { new Vector2(0.850683275812094f, 0.749094291589151f), new Vector2(0.697622619518418f, 0.555713306570058f), new Vector2(0.733465937764405f, 0.510427886027612f), new Vector2(0.89330776237489f, 0.696465289337119f) };
 
+        AxisAlignedBoxCollider _collider;
+        RigidBody _rigidBody;
         GameObject _body;
         GameObject _sizeContainer;
-        //bool _small;
+        bool _small;
 
         public Mario(Device device)
         {
             var texture = Texture.FromFile(device, "Assets/Textures/new-mario.png");
+
+            LoadBehaviors();
             CreateBody(device, texture);
+            IsSmall = false;
+        }
+
+        public bool IsSmall
+        {
+            get { return _small; }
+            set
+            {
+                _small = value;
+                var scale = value ? 0.5f : 0.8f;
+                _sizeContainer.Transform = Matrix.Scaling(scale);
+
+                _collider.RadiusWidth = 0.4f * scale;
+                _collider.RadiusHeight = scale;
+                _collider.RadiusDepth = 0.4f * scale;
+
+                while (!_rigidBody.ValidPosition())
+                    Translate(0, 0.05 * _rigidBody.Momentum.Y > 0 ? -1 : 1, 0);
+            }
+        }
+
+        void LoadBehaviors()
+        {
+            _rigidBody = new RigidBody { MaxSpeed = 2, Friction = new Vector3(0.8f, 0, 0.8f) };
+            Add(_rigidBody);
+            Add(new Mover{ Direction = new Vector3(0, -0.98f, 0), Acceleration = true, Continuous = true });
         }
 
         void CreateBody(Device device, Texture texture)
@@ -46,10 +77,10 @@ namespace Jv.Games.DX.Test.Objects
             _sizeContainer = Add(new GameObject());
 
             // Container vai ser rotacionado no plano xz para olhar na direção do movimento
-            var container = _sizeContainer.Add(new GameObject());
-            //.add(Behaviors.LookForward);
-
-            //container.add(Components.AxisAlignedBoxCollider, { object: this });
+            var container = _sizeContainer.Add(new GameObject {
+                (_collider = new Components.AxisAlignedBoxCollider())
+                //new Behaviors.LookForward()
+            });
 
             // Body container poderá rotacionar no seu eixo X, sem que a direção seja impactada
             var bodyContainer = container.Add(new GameObject());
