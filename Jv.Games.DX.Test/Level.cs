@@ -113,7 +113,14 @@ namespace Jv.Games.DX.Test
 
                     if (blockTexture != null)
                     {
-                        _map.Add(new Block(device, 1, 1, 2, blockTexture)).Translate(x, y, 0);
+                        int width = 1;
+                        while (x + 1 < line.Length && line[x + 1] == c)
+                        {
+                            width++;
+                            x++;
+                        }
+                        var obj = _map.Add(new Block(device, width, 1, 2, blockTexture));
+                        obj.Translate(x - (float)(width - 1) / 2, y, 0);
                     }
                 }
 
