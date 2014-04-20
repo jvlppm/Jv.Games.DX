@@ -38,7 +38,7 @@ namespace Jv.Games.DX.Test
 
             if (_player != null)
             {
-                var camera = new Camera { new LookAtObject(_player) };
+                var camera = new Camera { new LookAtObject(_player), new Follow(_player) { Offset = new Vector3(0, 5, 0), Mask = new Vector3(1, 1, 0) }, new RigidBody() };
                 camera.Viewport = new SharpDX.Viewport(0, 0, window.Width, window.Height);
                 camera.SetPerspective(60, window.Width / (float)window.Height, 1, 5000);
 
@@ -74,12 +74,10 @@ namespace Jv.Games.DX.Test
                             if (_player == null || _oldStartPos != new Vector2(x, y))
                             {
                                 if (_player == null)
-                                {
                                     _player = Add(new Mario(device));
-                                    _player.Transform *= Matrix.RotationY(MathUtil.DegreesToRadians(-90))
-                                                      * Matrix.Translation(x, y + 0.5f, 0);
-                                }
-                                else _player.Transform = Matrix.Translation(x, y + 0.5f, 0);
+
+                                _player.Transform = Matrix.RotationY(MathUtil.DegreesToRadians(-90))
+                                                  * Matrix.Translation(x, y + 0.5f, 0);
 
                                 _oldStartPos = new Vector2(x, y);
                             }
