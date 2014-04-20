@@ -14,13 +14,13 @@ namespace Jv.Games.DX.Test.Objects
 
         public BrickBlock(Device device)
         {
-            var renderer = new MeshRenderer
+            Add(new MeshRenderer
             {
                 Mesh = new TexturedCube(device, 1, 1, 1, UV, UV, UV, UV, TopUV, BottomUV),
                 Material = new TextureMaterial(Texture.FromFile(device, "Assets/Textures/block_brick.png"), false)
-            };
+            });
 
-            Add(renderer);
+            Add(new AxisAlignedBoxCollider());
         }
     }
 }
