@@ -23,7 +23,11 @@ namespace Jv.Games.DX.Test
             : base(device)
         {
             ClearColor = new Color(0x51, 0xa9, 0xf0);
+#if DEBUG
+            _mapFile = "../../Assets/Maps/Level" + number + ".txt";
+#else
             _mapFile = "Assets/Maps/Level" + number + ".txt";
+#endif
 
             ReloadScene(device);
 
@@ -80,9 +84,9 @@ namespace Jv.Games.DX.Test
                                     width++;
                                     x++;
                                 }
-                                var water = _map.Add(new Water(device, 10 + 10 * width, 20));
+                                var water = _map.Add(new Water(device, 10 * width, 20));
                                 water.Transform *= Matrix.Scaling(0.1f)
-                                              * Matrix.Translation(x - (float)(width) / 2 + 0.25f, y, 0);
+                                              * Matrix.Translation(x - (float)(width - 1) / 2, y, 0);
                                 break;
                             }
 
