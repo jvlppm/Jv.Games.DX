@@ -16,7 +16,7 @@ namespace Mage
         //em relação ao anterior.
         //
         //Deve retornar falso para o jogo acabar.
-        bool Process(TimeSpan deltaTime);
+        bool Process(SharpDX.Direct3D9.Device device, TimeSpan deltaTime);
 
         //Chamado todo game loop, para que o jogo desenhe a cena.
         void Paint(SharpDX.Direct3D9.Device device);

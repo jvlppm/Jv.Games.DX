@@ -3,6 +3,7 @@ using Jv.Games.DX.Test.Objects;
 using Mage;
 using SharpDX.Direct3D9;
 using System;
+using System.IO;
 
 namespace Jv.Games.DX.Test
 {
@@ -10,7 +11,7 @@ namespace Jv.Games.DX.Test
     {
         Scene _scene;
 
-        public void Setup(SharpDX.Direct3D9.Device device, GameWindow window)
+        public void Setup(Device device, GameWindow window)
         {
             var marioTexture = Texture.FromFile(device, "Assets/Textures/new-mario.png");
 
@@ -18,9 +19,9 @@ namespace Jv.Games.DX.Test
             _scene.Init();
         }
 
-        public bool Process(TimeSpan deltaTime)
+        public bool Process(Device device, TimeSpan deltaTime)
         {
-            _scene.Update(deltaTime);
+            _scene.Update(device, deltaTime);
             return true;
         }
 

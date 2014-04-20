@@ -113,7 +113,7 @@ namespace Mage
                     {
                         var deltaTime = sw.Elapsed;
                         sw.Restart();
-                        if (game.Process(deltaTime))
+                        if (game.Process(_device, deltaTime))
                             game.Paint(_device);
                         else
                         {

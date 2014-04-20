@@ -24,7 +24,7 @@ namespace Jv.Games.DX
         List<IUpdateable> Updateables;
         List<Camera> Cameras;
         Dictionary<string, Effect> ShadersByName;
-        Dictionary<Effect, Dictionary<EffectHandle, List<MeshRenderer>>> RenderersByTechnique;
+        Dictionary<string, Dictionary<string, List<RenderInfo>>> RenderersByTechnique;
         List<RenderInfo> SortedRendereres;
 
         public Scene(Device device)
@@ -33,7 +33,7 @@ namespace Jv.Games.DX
             Cameras = new List<Camera>();
             Updateables = new List<IUpdateable>();
             ShadersByName = new Dictionary<string, Effect>();
-            RenderersByTechnique = new Dictionary<Effect, Dictionary<EffectHandle, List<MeshRenderer>>>();
+            RenderersByTechnique = new Dictionary<string, Dictionary<string, List<RenderInfo>>>();
             SortedRendereres = new List<RenderInfo>();
         }
 
@@ -78,25 +78,29 @@ namespace Jv.Games.DX
             if (!ShadersByName.TryGetValue(renderer.Material.Effect, out shader))
                 ShadersByName[renderer.Material.Effect] = (shader = LoadShaderFromFile(renderer.Material.Effect));
 
+            var gWVP = shader.GetParameter(null, "gWVP");
+
             var technique = shader.GetTechnique(renderer.Material.Technique);
+
+            var renderInfo = new RenderInfo { Object = renderer.Object, Effect = shader, Technique = technique, Renderer = renderer, WVPHandle = gWVP };
+
+            renderInfo.Renderer.Material.Init(shader);
 
             if (renderer.Material.SortRendering)
             {
-                var gWVP = shader.GetParameter(null, "gWVP");
-                var renderInfo = new RenderInfo { Object = renderer.Object, Effect = shader, Technique = technique, Renderer = renderer, WVPHandle = gWVP };
                 SortedRendereres.Add(renderInfo);
                 return Disposable.Create(() => SortedRendereres.Remove(renderInfo));
             }
 
-            if (!RenderersByTechnique.ContainsKey(shader))
-                RenderersByTechnique[shader] = new Dictionary<EffectHandle, List<MeshRenderer>>();
+            if (!RenderersByTechnique.ContainsKey(renderer.Material.Effect))
+                RenderersByTechnique[renderer.Material.Effect] = new Dictionary<string, List<RenderInfo>>();
 
-            if (!RenderersByTechnique[shader].ContainsKey(renderer.Material.Technique))
-                RenderersByTechnique[shader][technique] = new List<MeshRenderer>();
+            if (!RenderersByTechnique[renderer.Material.Effect].ContainsKey(renderer.Material.Technique))
+                RenderersByTechnique[renderer.Material.Effect][renderer.Material.Technique] = new List<RenderInfo>();
 
-            var regLocation = RenderersByTechnique[shader][technique];
-            regLocation.Add(renderer);
-            return Disposable.Create(() => regLocation.Remove(renderer));
+            var regLocation = RenderersByTechnique[renderer.Material.Effect][renderer.Material.Technique];
+            regLocation.Add(renderInfo);
+            return Disposable.Create(() => regLocation.Remove(renderInfo));
         }
         #endregion
 
@@ -105,21 +109,7 @@ namespace Jv.Games.DX
             return Effect.FromFile(_device, file, ShaderFlags.Debug);
         }
 
-        public override void Init()
-        {
-            base.Init();
-
-            foreach (var item in from kvS in RenderersByTechnique
-                                 from kvT in kvS.Value
-                                 from r in kvT.Value
-                                 select new { Renderer = r, Shader = kvS.Key })
-                item.Renderer.Material.Init(item.Shader);
-
-            foreach (var item in SortedRendereres)
-                item.Renderer.Material.Init(item.Effect);
-        }
-
-        public void Update(TimeSpan deltaTime)
+        public virtual void Update(Device device, TimeSpan deltaTime)
         {
             foreach (var obj in Updateables)
                 obj.Update(deltaTime);
@@ -138,26 +128,21 @@ namespace Jv.Games.DX
 
                 foreach (var kvS in RenderersByTechnique)
                 {
-                    var shader = kvS.Key;
-                    var wvpHandler = shader.GetParameter(null, "gWVP");
-
                     foreach (var kvT in kvS.Value)
                     {
-                        var technique = kvT.Key;
-                        shader.Technique = technique;
-
-                        foreach (var renderer in kvT.Value)
+                        foreach (var info in kvT.Value)
                         {
-                            var mesh = renderer.Mesh;
+                            var mesh = info.Renderer.Mesh;
+                            var shader = info.Effect;
 
-                            var mvp = renderer.Object.GlobalTransform * vp;
-                            shader.SetValue(wvpHandler, mvp);
+                            var mvp = info.Object.GlobalTransform * vp;
+                            shader.SetValue(info.WVPHandle, mvp);
 
-                            _device.VertexDeclaration = renderer.Mesh.VertexDeclaration;
-                            _device.SetStreamSource(0, renderer.Mesh.VertexBuffer, 0, renderer.Mesh.VertexSize);
-                            _device.Indices = renderer.Mesh.IndexBuffer;
+                            _device.VertexDeclaration = mesh.VertexDeclaration;
+                            _device.SetStreamSource(0, mesh.VertexBuffer, 0, mesh.VertexSize);
+                            _device.Indices = mesh.IndexBuffer;
 
-                            renderer.Material.SetValues();
+                            info.Renderer.Material.SetValues();
 
                             var passes = shader.Begin();
                             for (var pass = 0; pass < passes; pass++)

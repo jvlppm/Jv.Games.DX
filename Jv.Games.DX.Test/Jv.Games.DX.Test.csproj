@@ -62,6 +62,8 @@
     <Compile Include="Mesh\TriangleGrid.cs" />
     <Compile Include="MyGame.cs" />
     <Compile Include="Mesh\Cube.cs" />
+    <Compile Include="Objects\ItemBlock.cs" />
+    <Compile Include="Objects\BrickBlock.cs" />
     <Compile Include="Objects\Mario.cs" />
     <Compile Include="Objects\Block.cs" />
     <Compile Include="Objects\Water.cs" />
@@ -81,9 +83,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Maps\Level1.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Assets\Textures\block_floor.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\Textures\block_empty.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\Textures\block_brick.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\Textures\block_question.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Content Include="Materials\texture.fx">
