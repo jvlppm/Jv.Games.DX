@@ -34,7 +34,8 @@ namespace Jv.Games.DX.Components
 
             if (disposing)
             {
-                _sceneRegistration.Dispose();
+                if (_sceneRegistration != null)
+                    _sceneRegistration.Dispose();
 
                 if (Object != null)
                     Object.Dettach(this);
