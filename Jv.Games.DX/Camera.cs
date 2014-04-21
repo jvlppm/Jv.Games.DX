@@ -18,5 +18,10 @@ namespace Jv.Games.DX
         {
             Projection = Matrix.PerspectiveFovLH(MathUtil.DegreesToRadians(fov), aspect, near, far);
         }
+
+        public void SetOrthographic(float width, float height, float near, float far)
+        {
+            Projection = Matrix.OrthoLH(width, height, near, far);
+        }
     }
 }
