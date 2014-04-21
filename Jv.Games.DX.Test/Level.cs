@@ -58,7 +58,7 @@ namespace Jv.Games.DX.Test
                 camera.SetPerspective(60, window.Width / (float)window.Height, 1, 5000);
                 //camera.SetOrthographic(20, 20 * (window.Height / (float)window.Width), 1, 5000);
 
-                camera.Translate(_player.Transform.TranslationVector.X, _player.Transform.TranslationVector.Y + 4, _player.Transform.TranslationVector.Z - 15);
+                camera.Translate(_player.Transform.TranslationVector.X, _player.Transform.TranslationVector.Y + 4, _player.Transform.TranslationVector.Z - 30);
                 Add(camera);
             }
         }
@@ -77,21 +77,16 @@ namespace Jv.Games.DX.Test
             _map = Add(new GameObject());
 
             var y = mapContent.Length;
-            foreach (var line in mapContent)
+            for (var l = 0; l < mapContent.Length; l++)
             {
-                int xOffset = 0;
-                for (int x = 0; x - xOffset < line.Length; x++)
+                var line = mapContent[l];
+                for (int x = 0; x < line.Length; x++)
                 {
-                    var c = line[x - xOffset];
+                    var c = line[x];
                     string blockTexture = null;
 
                     switch (c)
                     {
-                        case '\t':
-                            x += 3;
-                            xOffset += 3;
-                            break;
-
                         case 'M':
                             if (_player == null || _oldStartPos != new Vector2(x, y))
                             {
@@ -114,6 +109,16 @@ namespace Jv.Games.DX.Test
 
                         case 'B':
                             _map.Add(new BrickBlock(device)).Translate(x, y, 0);
+                            break;
+
+                        case 'P':
+                            if (l > 0 && mapContent[l - 1].Length > x && mapContent[l - 1][x] == c)
+                                break;
+                            var height = 1;
+                            while (l + height < mapContent.Length && mapContent[l + height][x] == c)
+                                height++;
+
+                            _map.Add(new Pipe(device, height)).Translate(x, y - (float)(height - 1) / 2, 0);
                             break;
 
                         case 'W':

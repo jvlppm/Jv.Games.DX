@@ -14,12 +14,14 @@ namespace Jv.Games.DX.Test.Objects
 {
     class Block : GameObject
     {
+        static Dictionary<string, TextureInfo> Textures = new Dictionary<string,TextureInfo>();
+
         public readonly Material Material;
 
         static Vector2[] DefaultUV = new[] { new Vector2(0, 0), new Vector2(1, 0), new Vector2(1, 1), new Vector2(0, 1) };
 
         public Block(Device device, float width, float height, float depth, string type, bool containsTransparency = false)
-            : this(device, width, height, depth, TextureInfo.FromFile(device, Directory.GetFiles("Assets/Textures", "block_" + type + ".*").First()), containsTransparency)
+            : this(device, width, height, depth, LoadTexture(device, type), containsTransparency)
         {
         }
 
@@ -41,11 +43,12 @@ namespace Jv.Games.DX.Test.Objects
                 Mesh = new TexturedCube(device, width, height, depth, zUV, zUV, xUV, xUV, yUV, yUV),
                 Material = Material
             });
-            
-            this.Add(new AxisAlignedBoxCollider { RadiusWidth = width / 2, RadiusHeight = height / 2, RadiusDepth = depth / 2});
+
+            this.Add(new AxisAlignedBoxCollider { RadiusWidth = width / 2, RadiusHeight = height / 2, RadiusDepth = depth / 2 });
         }
 
-        static Vector2[] CreateUV(TextureInfo info, float width, float height) {
+        static Vector2[] CreateUV(TextureInfo info, float width, float height)
+        {
             if (!info.Tile)
                 return DefaultUV;
 
@@ -56,6 +59,13 @@ namespace Jv.Games.DX.Test.Objects
             var v = height / (th / info.Density);
 
             return DefaultUV.Select(i => i * new Vector2(u, v)).ToArray();
+        }
+
+        static TextureInfo LoadTexture(Device device, string type)
+        {
+            if (!Textures.ContainsKey(type))
+                Textures[type] = TextureInfo.FromFile(device, Directory.GetFiles("Assets/Textures", "block_" + type + ".*").First());
+            return Textures[type];
         }
     }
 }

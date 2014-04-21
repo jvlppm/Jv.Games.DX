@@ -9,6 +9,8 @@ namespace Jv.Games.DX.Test.Objects
 {
     class Mario : GameObject
     {
+        static Texture Texture;
+
         static Vector2[] BodyFrontUV = new[] { new Vector2(0.172566444131249f, 0.377019484970136f), new Vector2(0.172566444131249f, 0.54592186429061f), new Vector2(0.0388805544570255f, 0.54592186429061f), new Vector2(0.0388805544570255f, 0.375795554685205f) };
         static Vector2[] BodyBackUV = new[] { new Vector2(0.171597705800277f, 0.0453343777538431f), new Vector2(0.170628967469304f, 0.211788896504455f), new Vector2(0.0388805544570255f, 0.211788896504455f), new Vector2(0.0388805544570255f, 0.046558308038774f) };
         static Vector2[] BodyLeftUV = new[] { new Vector2(0.169660229138331f, 0.211788896504455f), new Vector2(0.170628967469304f, 0.378243415255067f), new Vector2(0.0398492927879981f, 0.377019484970136f), new Vector2(0.0398492927879981f, 0.210564966219524f) };
@@ -42,10 +44,10 @@ namespace Jv.Games.DX.Test.Objects
         {
             Tag = "player";
 
-            var texture = Texture.FromFile(device, "Assets/Textures/new-mario.png");
+            Texture = Texture ?? Texture.FromFile(device, "Assets/Textures/new-mario.png");
 
             LoadBehaviors();
-            CreateBody(device, texture);
+            CreateBody(device, Texture);
             IsSmall = false;
         }
 
@@ -72,7 +74,7 @@ namespace Jv.Games.DX.Test.Objects
             _rigidBody = new RigidBody { MaxSpeed = new Vector3(2, 10, 2), Friction = new Vector3(8f, 0, 8f) };
             Add(_rigidBody);
             Add(new Gravity());
-            Add(new Controller { MinJumpForce = 2, MaxJumpForce = 5.6f, MoveForce = 20 });
+            Add(new Controller { MinJumpForce = 2, MoveForce = 20 });
             Add(new LookForward());
         }
 

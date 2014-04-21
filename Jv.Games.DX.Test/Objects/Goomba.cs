@@ -14,6 +14,8 @@ namespace Jv.Games.DX.Test.Objects
 {
     class Goomba : GameObject
     {
+        static Texture Texture;
+
         static Vector2[] FrontUV = new[] { new Vector2(0.469969111739848f, 0.417409184372858f), new Vector2(0.673404161244102f, 0.416185254087927f), new Vector2(0.673404161244102f, 0.641388426515226f), new Vector2(0.469969111739848f, 0.642612356800157f) };
         static Vector2[] BackUV = new[] { new Vector2(0.064067751062314f, 0.417409184372858f), new Vector2(0.26847153889754f, 0.416185254087927f), new Vector2(0.26847153889754f, 0.643836287085088f), new Vector2(0.064067751062314f, 0.641388426515226f) };
         static Vector2[] LeftUV = new[] { new Vector2(0.267502800566567f, 0.417409184372858f), new Vector2(0.471906588401794f, 0.416185254087927f), new Vector2(0.471906588401794f, 0.643836287085088f), new Vector2(0.267502800566567f, 0.642612356800157f) };
@@ -23,6 +25,8 @@ namespace Jv.Games.DX.Test.Objects
 
         public Goomba(Device device)
         {
+            Texture = Texture ?? Texture.FromFile(device, "Assets/Textures/goomba.png");
+
             Tag = "npc";
             Add(new Gravity());
             Add(new RandomWalk { CurrentDirection = new Vector3(-1, 0, 0) });
@@ -34,7 +38,7 @@ namespace Jv.Games.DX.Test.Objects
                 .Add(new MeshRenderer
                     {
                         Mesh = new TexturedCube(device, 1, 1, 1, FrontUV, BackUV, LeftUV, RightUV, TopUV, BottomUV),
-                        Material = new TextureMaterial(Texture.FromFile(device, "Assets/Textures/goomba.png"), false)
+                        Material = new TextureMaterial(Texture, false)
                     });
 
             var deathHitbox = Add(new GameObject

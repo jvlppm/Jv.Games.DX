@@ -1,10 +1,10 @@
-﻿              ?
-
-S             G               S
-S           B?B?B           S S
-S      G                  S S S
-S  M  SS                S S S S
-FFFFFFFFFFFFFFFFFWWWWFFFFFFFFFFFFF
-                S    S
-                S    S
-                SSSSSS
+﻿                                                                               G
+                  ?                                                      GBBBBBBBBBBB   BBB?
+                                                                         
+                                                                         
+S                                                                        
+S           ?   B?B?B                      P          P               B?B                 B
+S                                  P       P          P                         
+S                        P         P       P          P                         
+S  M             G       P         P   G   P    G G   P                                   GG
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF  FFFFFFFFFFFFFFFF   FFFFFFFFFFFF

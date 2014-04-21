@@ -18,8 +18,6 @@ namespace Jv.Games.DX.Test
             window.TopMost = true;
 #endif
 
-            var marioTexture = Texture.FromFile(device, "Assets/Textures/new-mario.png");
-
             _scene = new Level(window, device, 1);
             _scene.Init();
         }
