@@ -14,6 +14,10 @@ namespace Jv.Games.DX.Test
 
         public void Setup(Device device, GameWindow window)
         {
+#if DEBUG
+            window.TopMost = true;
+#endif
+
             var marioTexture = Texture.FromFile(device, "Assets/Textures/new-mario.png");
 
             _scene = new Level(window, device, 1);
