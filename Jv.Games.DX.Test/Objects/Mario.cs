@@ -72,7 +72,7 @@ namespace Jv.Games.DX.Test.Objects
             _rigidBody = new RigidBody { MaxSpeed = new Vector3(2, 10, 2), Friction = new Vector3(8f, 0, 8f) };
             Add(_rigidBody);
             Add(new Gravity());
-            Add(new Controller { MinJumpForce = 2, MaxJumpForce = 4.91f, MoveForce = 20 });
+            Add(new Controller { MinJumpForce = 2, MaxJumpForce = 5.6f, MoveForce = 20 });
             Add(new LookForward());
         }
 
