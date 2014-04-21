@@ -8,6 +8,8 @@ namespace Mage
 {
     public class GameWindow : Form
     {
+        public static GameWindow Current;
+
         const int DefaultAdapter = 0;
         Device _device;
         PresentParameters _deviceParams;
@@ -98,6 +100,8 @@ namespace Mage
             if (_device == null)
                 throw new InvalidOperationException("Setup must be called before Run.");
 
+            Current = this;
+
             Show();
             _game = game;
 
@@ -129,6 +133,8 @@ namespace Mage
                 throw;
             }
             game.ShutDown(_device);
+
+            Current = null;
         }
 
         bool IsDeviceLost()

@@ -15,7 +15,7 @@ namespace Jv.Games.DX.Components
         public Vector3 Momentum;
         public float Mass = 1;
         public Vector3 Friction;
-        public float? MaxSpeed;
+        public Vector3? MaxSpeed;
 
         public RigidBody()
         {
@@ -44,7 +44,7 @@ namespace Jv.Games.DX.Components
                 }
             }
 
-            var toMove = Momentum + _acceleration / 2;
+            var toMove = Momentum + acceleration / 2;
 
             if (axis != null)
             {
@@ -57,11 +57,18 @@ namespace Jv.Games.DX.Components
                 }
             }
 
-            if (MaxSpeed != null)
+            if (MaxSpeed != null && toMove != Vector3.Zero)
             {
-                var speed = new Vector3(toMove.X, 0, toMove.Z).Length();
-                if (speed > MaxSpeed)
-                    toMove *= new Vector3(MaxSpeed.Value / speed, 1, MaxSpeed.Value / speed);
+                var speed = toMove;
+                toMove = new Vector3(
+                    Math.Abs(speed.X) > MaxSpeed.Value.X ? MaxSpeed.Value.X * (speed.X < 0 ? -1 : 1) : speed.X,
+                    Math.Abs(speed.Y) > MaxSpeed.Value.Y ? MaxSpeed.Value.Y * (speed.Y < 0 ? -1 : 1) : speed.Y,
+                    Math.Abs(speed.Z) > MaxSpeed.Value.Z ? MaxSpeed.Value.Z * (speed.Z < 0 ? -1 : 1) : speed.Z);
+
+                //var speed = new Vector3(toMove.X, 0, toMove.Z).Length();
+                //var maxSpeed = MaxSpeed.Value.Length();
+                //if (speed > maxSpeed)
+                //    toMove *= new Vector3(maxSpeed / speed, 1, maxSpeed / speed);
             }
 
             var oldTransform = Object.Transform;

@@ -56,9 +56,9 @@ namespace Jv.Games.DX.Test.Objects
                 var scale = value ? 0.5f : 0.8f;
                 _sizeContainer.Transform = Matrix.Scaling(scale);
 
-                _collider.RadiusWidth = 0.4f * scale;
+                _collider.RadiusWidth = 0.6f * scale;
                 _collider.RadiusHeight = scale;
-                _collider.RadiusDepth = 0.4f * scale;
+                _collider.RadiusDepth = 0.6f * scale;
 
                 while (!_rigidBody.ValidPosition())
                     Translate(0, 0.05 * _rigidBody.Momentum.Y > 0 ? -1 : 1, 0);
@@ -67,9 +67,10 @@ namespace Jv.Games.DX.Test.Objects
 
         void LoadBehaviors()
         {
-            _rigidBody = new RigidBody { MaxSpeed = 2, Friction = new Vector3(0.8f, 0, 0.8f) };
+            _rigidBody = new RigidBody { MaxSpeed = new Vector3(2, 10, 2), Friction = new Vector3(8f, 0, 8f) };
             Add(_rigidBody);
-            Add(new Mover{ Direction = new Vector3(0, -0.98f, 0), Acceleration = true, Continuous = true });
+            Add(new Mover{ Direction = new Vector3(0, -9.8f, 0), Acceleration = true, Continuous = true });
+            Add(new Controller { MinJumpForce = 2, MaxJumpForce = 4.91f, MoveForce = 20 });
         }
 
         void CreateBody(Device device, Texture texture)

@@ -51,10 +51,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviors\Controller.cs" />
     <Compile Include="Behaviors\Follow.cs" />
     <Compile Include="Behaviors\Mover.cs" />
     <Compile Include="Behaviors\Rotating.cs" />
     <Compile Include="Behaviors\LookAtObject.cs" />
+    <Compile Include="Input\Keyboard.cs" />
+    <Compile Include="Input\KeyboardState.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="Materials\TextureMaterial.cs" />
     <Compile Include="Materials\WaveMaterial.cs" />

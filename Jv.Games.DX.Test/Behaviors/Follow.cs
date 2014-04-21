@@ -13,8 +13,10 @@ namespace Jv.Games.DX.Test.Behaviors
         GameObject _target;
         public Vector3 Mask = Vector3.One;
         RigidBody _rigidBody;
+        RigidBody _targetBody;
 
         public Vector3 Offset;
+        public float Speed = 20;
 
         public Follow(GameObject target)
         {
@@ -24,13 +26,26 @@ namespace Jv.Games.DX.Test.Behaviors
         public override void Init()
         {
             _rigidBody = Object.SearchComponent<RigidBody>();
+            _targetBody = _target.SearchComponent<RigidBody>();
             base.Init();
         }
 
         public void Update(TimeSpan deltaTime)
         {
             var d = _target.GlobalTransform.TranslationVector - Object.GlobalTransform.TranslationVector + Offset;
-            _rigidBody.Push(d * Mask, false, false);
+            var dist = (d * Mask).Length();
+
+            float moveSpeed = 0;
+            if (dist <= 1)
+                moveSpeed = 0.1f;
+            else
+                moveSpeed = Speed;
+
+            var toMove = (d * Mask);
+            toMove.Normalize();
+
+
+            _rigidBody.Push(toMove * moveSpeed, false, false);
         }
     }
 }

@@ -19,6 +19,8 @@ namespace Jv.Games.DX.Test
 
         Vector2 _oldStartPos;
 
+        TimeSpan _checkFileCount;
+        TimeSpan VerifyMapFile = TimeSpan.FromSeconds(2);
         GameObject _player;
         GameObject _map;
         DateTime _mapModifyDate;
@@ -38,7 +40,20 @@ namespace Jv.Games.DX.Test
 
             if (_player != null)
             {
-                var camera = new Camera { new LookAtObject(_player), new Follow(_player) { Offset = new Vector3(0, 5, 0), Mask = new Vector3(1, 1, 0) }, new RigidBody() };
+                var camera = new Camera
+                {
+                    new LookAtObject(_player),
+                    new Follow(_player)
+                    {
+                        Offset = new Vector3(0, 5, 0),
+                        Mask = new Vector3(1, 1, 0)
+                    },
+                    new RigidBody
+                    {
+                        Friction = new Vector3(10),
+                        MaxSpeed = new Vector3(5f)
+                    }
+                };
                 camera.Viewport = new SharpDX.Viewport(0, 0, window.Width, window.Height);
                 camera.SetPerspective(60, window.Width / (float)window.Height, 1, 5000);
 
@@ -49,7 +64,7 @@ namespace Jv.Games.DX.Test
 
         public override void Init()
         {
-            RigidBody.MeterSize = 8;
+            RigidBody.MeterSize = 3;
             base.Init();
         }
 
@@ -134,13 +149,18 @@ namespace Jv.Games.DX.Test
 
         public override void Update(Device device, TimeSpan deltaTime)
         {
-            var fileDate = File.GetLastWriteTime(_mapFile);
-            if (fileDate > _mapModifyDate)
+            _checkFileCount += deltaTime;
+            if (_checkFileCount > VerifyMapFile)
             {
-                _map.Dispose();
-                ReloadScene(device);
-                _mapModifyDate = fileDate;
-                _map.Init();
+                _checkFileCount = TimeSpan.Zero;
+                var fileDate = File.GetLastWriteTime(_mapFile);
+                if (fileDate > _mapModifyDate)
+                {
+                    _map.Dispose();
+                    ReloadScene(device);
+                    _mapModifyDate = fileDate;
+                    _map.Init();
+                }
             }
 
             if (deltaTime > MaxFrameDelay)
