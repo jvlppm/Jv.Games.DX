@@ -74,6 +74,7 @@
     <Compile Include="Objects\BrickBlock.cs" />
     <Compile Include="Objects\Mario.cs" />
     <Compile Include="Objects\Block.cs" />
+    <Compile Include="Objects\Trigger.cs" />
     <Compile Include="Objects\Water.cs" />
     <Compile Include="Objects\Model.cs" />
     <Compile Include="Program.cs" />

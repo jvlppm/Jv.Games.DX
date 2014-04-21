@@ -16,7 +16,7 @@ namespace Jv.Games.DX.Components
                 throw new InvalidOperationException("This component is already registered in a scene.");
 
             if (Material != null)
-                _sceneRegistration = Object.GetParent<Scene>().Register(Material);
+                _sceneRegistration = Object.GetParent<Scene>().Register(Material, Object);
         }
 
         protected override void Dispose(bool disposing)

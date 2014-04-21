@@ -20,8 +20,15 @@ namespace Jv.Games.DX
             public EffectHandle Technique;
         }
 
+        struct Registration<Type>
+        {
+            public GameObject Owner;
+            public Type Item;
+        }
+
         readonly Device _device;
-        List<IUpdateable> Updateables;
+        List<Registration<IUpdateable>> Updateables;
+        List<Registration<IUpdateable>> RemoveUpdateables;
         List<Camera> Cameras;
         List<Collider> _colliders;
         Dictionary<string, Effect> ShadersByName;
@@ -34,7 +41,8 @@ namespace Jv.Games.DX
         {
             _device = device;
             Cameras = new List<Camera>();
-            Updateables = new List<IUpdateable>();
+            Updateables = new List<Registration<IUpdateable>>();
+            RemoveUpdateables = new List<Registration<IUpdateable>>();
             ShadersByName = new Dictionary<string, Effect>();
             RenderersByTechnique = new Dictionary<string, Dictionary<string, List<RenderInfo>>>();
             SortedRendereres = new List<RenderInfo>();
@@ -42,7 +50,17 @@ namespace Jv.Games.DX
         }
 
         #region Register
-        public IDisposable Register(object item)
+        public IDisposable Register(GameObject item)
+        {
+            return Register(item, item);
+        }
+
+        public IDisposable Register(Components.Component item)
+        {
+            return Register(item, item.Object);
+        }
+
+        public IDisposable Register(object item, GameObject owner)
         {
             var disposables = new List<IDisposable>();
 
@@ -56,7 +74,7 @@ namespace Jv.Games.DX
 
             var updateable = item as IUpdateable;
             if (updateable != null)
-                disposables.Add(RegisterUpdateable(updateable));
+                disposables.Add(RegisterUpdateable(owner, updateable));
 
             var collider = item as Collider;
             if (collider != null)
@@ -74,10 +92,11 @@ namespace Jv.Games.DX
             return Disposable.Create(() => _colliders.Remove(collider));
         }
 
-        IDisposable RegisterUpdateable(IUpdateable updateable)
+        IDisposable RegisterUpdateable(GameObject owner, IUpdateable updateable)
         {
-            Updateables.Add(updateable);
-            return Disposable.Create(() => Updateables.Remove(updateable));
+            var reg = new Registration<IUpdateable> { Item = updateable, Owner = owner };
+            Updateables.Add(reg);
+            return Disposable.Create(() => RemoveUpdateables.Add(reg));
         }
 
         IDisposable RegisterCamera(Camera camera)
@@ -126,7 +145,14 @@ namespace Jv.Games.DX
         public virtual void Update(Device device, TimeSpan deltaTime)
         {
             foreach (var obj in Updateables)
-                obj.Update(deltaTime);
+            {
+                if(obj.Owner.Enabled)
+                    obj.Item.Update(deltaTime);
+            }
+
+            foreach (var obj in RemoveUpdateables)
+                Updateables.Remove(obj);
+            RemoveUpdateables.Clear();
         }
 
         public void Draw()
@@ -146,6 +172,9 @@ namespace Jv.Games.DX
                     {
                         foreach (var info in kvT.Value)
                         {
+                            if (!info.Object.Visible)
+                                continue;
+
                             var mesh = info.Renderer.Mesh;
                             var shader = info.Effect;
 

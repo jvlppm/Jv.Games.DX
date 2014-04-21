@@ -16,6 +16,8 @@ namespace Jv.Games.DX
         List<Components.Component> _components;
 
         public GameObject Parent;
+        public bool Visible = true;
+        public bool Enabled = true;
         #endregion
 
         #region Constructors

@@ -6,19 +6,65 @@ using SharpDX.Direct3D9;
 
 namespace Jv.Games.DX.Test.Objects
 {
-    class ItemBlock : GameObject
+    class ItemBlock : GameObject, IUpdateable
     {
+        static Texture DefaultTexture, EmptyTexture;
+
+        float? _toMove;
+        TextureMaterial _material;
+
         static Vector2[] UV = new[] { new Vector2(0, 0), new Vector2(1, 0), new Vector2(1, 1), new Vector2(0, 1) };
+
+        public GameObject Item;
 
         public ItemBlock(Device device)
         {
-            var renderer = new MeshRenderer
+            Add(new Trigger(OnTrigger, 1, 0.5f, 1, new Vector3(0, -0.5f, 0)));
+
+            DefaultTexture = DefaultTexture ?? Texture.FromFile(device, "Assets/Textures/block_question.png");
+            EmptyTexture = EmptyTexture ?? Texture.FromFile(device, "Assets/Textures/block_empty.png");
+
+            Add(new MeshRenderer
             {
                 Mesh = new TexturedCube(device, 1, 1, 1, UV, UV, UV, UV, UV, UV),
-                Material = new TextureMaterial(Texture.FromFile(device, "Assets/Textures/block_question.png"), false)
-            };
+                Material = (_material = new TextureMaterial(DefaultTexture, false))
+            });
 
-            Add(renderer);
+            Add(new AxisAlignedBoxCollider());
+        }
+
+        void OnTrigger(Collider collider)
+        {
+            var body = collider.Object.SearchComponent<RigidBody>();
+            if (body.Momentum.Y < 0)
+                return;
+
+            _material.Texture = EmptyTexture;
+
+            if(Item != null && _toMove != null)
+            {
+                Item.Visible = true;
+                _toMove = 1;
+                Item.Transform = Transform;
+                Parent.Add(Item);
+                Item.Init();
+            }
+        }
+
+        public void Update(System.TimeSpan deltaTime)
+        {
+            if (Item == null || _toMove == null)
+                return;
+
+            Item.Translate(0, (float)deltaTime.TotalSeconds, 0);
+            _toMove -= (float)deltaTime.TotalSeconds;
+
+            if(_toMove < 0)
+            {
+                _toMove = null;
+                Item.Enabled = true;
+                Item = null;
+            }
         }
     }
 }
