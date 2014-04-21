@@ -56,6 +56,8 @@
     <Compile Include="Behaviors\Mover.cs" />
     <Compile Include="Behaviors\Rotating.cs" />
     <Compile Include="Behaviors\LookAtObject.cs" />
+    <Compile Include="Behaviors\SwingWhileMoving.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Input\Keyboard.cs" />
     <Compile Include="Input\KeyboardState.cs" />
     <Compile Include="Level.cs" />

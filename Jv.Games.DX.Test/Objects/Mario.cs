@@ -69,7 +69,7 @@ namespace Jv.Games.DX.Test.Objects
         {
             _rigidBody = new RigidBody { MaxSpeed = new Vector3(2, 10, 2), Friction = new Vector3(8f, 0, 8f) };
             Add(_rigidBody);
-            Add(new Mover{ Direction = new Vector3(0, -9.8f, 0), Acceleration = true, Continuous = true });
+            Add(new Mover { Direction = new Vector3(0, -9.8f, 0), Acceleration = true, Continuous = true });
             Add(new Controller { MinJumpForce = 2, MaxJumpForce = 4.91f, MoveForce = 20 });
         }
 
@@ -96,14 +96,14 @@ namespace Jv.Games.DX.Test.Objects
             AddHead(device, texture);
             AddCap(device, texture);
             AddChest(device, texture);
-            AddArm(device, texture, new Vector3(-0.35f, 0.05f, 0f));
-            //.Add(Behaviors.SwingWhileMoving, { axis: xAxis, inverse: true });
-            AddArm(device, texture, new Vector3(0.35f, 0.05f, 0f));
-            //.Add(Behaviors.SwingWhileMoving, { axis: xAxis });
-            AddLeg(device, texture, new Vector3(-0.125f, -0.35f, 0f));
-            //.Add(Behaviors.SwingWhileMoving, { axis: xAxis });
-            AddLeg(device, texture, new Vector3(0.125f, -0.35f, 0f));
-            //.Add(Behaviors.SwingWhileMoving, { axis: xAxis, inverse: true });
+            AddArm(device, texture, new Vector3(-0.35f, 0.05f, 0f))
+                .Add(new SwingWhileMoving(xAxis) { Inverse = true });
+            AddArm(device, texture, new Vector3(0.35f, 0.05f, 0f))
+                .Add(new SwingWhileMoving(xAxis));
+            AddLeg(device, texture, new Vector3(-0.125f, -0.35f, 0f))
+                .Add(new SwingWhileMoving(xAxis));
+            AddLeg(device, texture, new Vector3(0.125f, -0.35f, 0f))
+                .Add(new SwingWhileMoving(xAxis) { Inverse = true });
         }
 
         GameObject AddHead(Device device, Texture texture)
