@@ -21,7 +21,7 @@ namespace Jv.Games.DX.Test
 
         TimeSpan _checkFileCount;
         TimeSpan VerifyMapFile = TimeSpan.FromSeconds(2);
-        GameObject _player;
+        Mario _player;
         GameObject _map;
         DateTime _mapModifyDate;
         string _mapFile;
@@ -87,15 +87,17 @@ namespace Jv.Games.DX.Test
 
                     switch (c)
                     {
+                        case 'm':
                         case 'M':
                             if (_player == null || _oldStartPos != new Vector2(x, y))
                             {
                                 if (_player == null)
-                                    _player = Add(new Mario(device));
+                                    _player = (Mario)Add(new Mario(device));
 
                                 _player.Transform = Matrix.Translation(x, y + 0.5f, 0);
 
                                 _oldStartPos = new Vector2(x, y);
+                                _player.IsSmall = c == 'm';
                             }
                             break;
 

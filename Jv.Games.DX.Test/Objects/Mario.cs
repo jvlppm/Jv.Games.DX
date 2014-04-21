@@ -35,6 +35,7 @@ namespace Jv.Games.DX.Test.Objects
         static Vector2[] CapUV = new[] { new Vector2(0.850683275812094f, 0.749094291589151f), new Vector2(0.697622619518418f, 0.555713306570058f), new Vector2(0.733465937764405f, 0.510427886027612f), new Vector2(0.89330776237489f, 0.696465289337119f) };
 
         AxisAlignedBoxCollider _collider;
+        Blink _blink;
         RigidBody _rigidBody;
         GameObject _body;
         GameObject _sizeContainer;
@@ -64,8 +65,11 @@ namespace Jv.Games.DX.Test.Objects
                 _collider.RadiusHeight = scale;
                 _collider.RadiusDepth = 0.6f * scale;
 
-                while (!_rigidBody.ValidPosition())
-                    Translate(0, 0.05 * _rigidBody.Momentum.Y > 0 ? -1 : 1, 0);
+                if (!value)
+                {
+                    while (!_rigidBody.ValidPosition(Vector3.Zero))
+                        Translate(0, 0.05 * _rigidBody.Momentum.Y > 0 ? -1 : 1, 0);
+                }
             }
         }
 
@@ -76,6 +80,8 @@ namespace Jv.Games.DX.Test.Objects
             Add(new Gravity());
             Add(new Controller { MinJumpForce = 2, MoveForce = 20 });
             Add(new LookForward());
+            _blink = new Blink();
+            Add(_blink);
         }
 
         void CreateBody(Device device, Texture texture)
@@ -84,10 +90,9 @@ namespace Jv.Games.DX.Test.Objects
 
             // Container vai ser rotacionado no plano xz para olhar na direção do movimento
             var container = _sizeContainer.Add(new GameObject {
-                (_collider = new Components.AxisAlignedBoxCollider())
+                (_collider = new Components.AxisAlignedBoxCollider { Object = this })
                 //new Behaviors.LookForward()
             });
-            container.Tag = Tag;
 
             // Body container poderá rotacionar no seu eixo X, sem que a direção seja impactada
             var bodyContainer = container.Add(new GameObject());
@@ -183,6 +188,18 @@ namespace Jv.Games.DX.Test.Objects
             leg.Translate(location + new Vector3(0, 0.05f, 0));
             leg.Add(marioLegMesh);
             return container;
+        }
+
+        public void OnHit() {
+            if(!_blink.IsActive)
+                IsSmall = true;
+        }
+
+        public void onTrigger(Components.Collider collider) {
+            //if (collider.Object is Mushroom) {
+                //IsSmall = false;
+                //collider.Object.Dispose();
+            //}
         }
     }
 }

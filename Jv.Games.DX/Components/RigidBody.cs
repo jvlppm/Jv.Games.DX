@@ -31,7 +31,7 @@ namespace Jv.Games.DX.Components
             base.Init();
         }
 
-        public bool TryMove(TimeSpan deltaTime, Vector3 acceleration, int? axis = null)
+        bool TryMove(TimeSpan deltaTime, Vector3 acceleration, bool notifyColliders, int? axis = null)
         {
             if (axis != null)
             {
@@ -73,7 +73,7 @@ namespace Jv.Games.DX.Components
 
             var oldTransform = Object.Transform;
             Object.Translate(toMove * MeterSize * (float)deltaTime.TotalSeconds);
-            if (ValidPosition())
+            if (ValidPosition(notifyColliders))
             {
                 Momentum += acceleration;
                 return true;
@@ -90,13 +90,13 @@ namespace Jv.Games.DX.Components
 
             var accellSecs = addedAccel * (float)deltaTime.TotalSeconds + addedInstantAccel;
 
-            if (!TryMove(deltaTime, accellSecs))
+            if (!TryMove(deltaTime, accellSecs, true))
             {
-                if (!TryMove(deltaTime, accellSecs, 1))
+                if (!TryMove(deltaTime, accellSecs, false, 1))
                     Momentum.Y = 0;
-                if (!TryMove(deltaTime, accellSecs, 0))
+                if (!TryMove(deltaTime, accellSecs, false, 0))
                     Momentum.X = 0;
-                if (!TryMove(deltaTime, accellSecs, 2))
+                if (!TryMove(deltaTime, accellSecs, false, 2))
                     Momentum.Z = 0;
             }
 
@@ -111,7 +111,16 @@ namespace Jv.Games.DX.Components
             _acceleration -= addedAccel;
         }
 
-        public bool ValidPosition()
+        public bool ValidPosition(Vector3 offset)
+        {
+            var origTransform = Object.Transform;
+            Object.Translate(offset);
+            var res = ValidPosition(false);
+            Object.Transform = origTransform;
+            return res;
+        }
+
+        bool ValidPosition(bool notifyColliders)
         {
             if (Collider == null)
                 return true;
@@ -123,10 +132,13 @@ namespace Jv.Games.DX.Components
 
                 if (Collider.Intersects(other))
                 {
-                    if (Collider.IsTrigger || other.IsTrigger)
+                    if (notifyColliders)
                     {
-                        Object.SendMessage("OnTrigger", true, other);
-                        other.Object.SendMessage("OnTrigger", true, Collider);
+                        if (Collider.IsTrigger || other.IsTrigger)
+                        {
+                            Object.SendMessage("OnTrigger", true, other);
+                            other.Object.SendMessage("OnTrigger", true, Collider);
+                        }
                     }
 
                     if (!Collider.IsTrigger && !other.IsTrigger)

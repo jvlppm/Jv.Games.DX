@@ -34,11 +34,7 @@ namespace Jv.Games.DX.Test.Behaviors
             if (_rigidBody.Momentum.Y != 0)
                 return false;
 
-            var oldTransform = Object.Transform;
-            Object.Translate(0, -0.25f, 0);
-            var result = !_rigidBody.ValidPosition();
-            Object.Transform = oldTransform;
-            return result;
+            return !_rigidBody.ValidPosition(new Vector3(0, -0.25f, 0));
         }
 
         public void Update(TimeSpan deltaTime)

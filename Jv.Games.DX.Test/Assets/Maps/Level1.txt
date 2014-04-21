@@ -6,5 +6,5 @@ S
 S           ?   B?B?B                      P          P               B?B                 B
 S                                  P       P          P                         
 S                        P         P       P          P                         
-S  M             G       P         P   G   P    G G   P                                   GG
+S  m             G       P         P   G   P    G G   P                                   GG
 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF  FFFFFFFFFFFFFFFF   FFFFFFFFFFFF

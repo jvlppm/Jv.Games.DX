@@ -113,6 +113,19 @@ namespace Jv.Games.DX
 
             return (T)current;
         }
+
+        public bool CanRender()
+        {
+            var current = this;
+            do
+            {
+                if (!current.Visible)
+                    return false;
+
+                current = current.Parent;
+            } while (current != null);
+            return true;
+        }
         #endregion
 
         public virtual void Init()

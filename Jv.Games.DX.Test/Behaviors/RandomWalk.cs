@@ -26,18 +26,11 @@ namespace Jv.Games.DX.Test.Behaviors
         {
             if (!CanFall)
             {
-                var testDirection = CurrentDirection * (float)deltaTime.TotalSeconds;
-
-                var originalPosition = _body.Object.Transform;
-                _body.Object.Translate(CurrentDirection * 0.5f + new Vector3(0, -0.5f, 0));
-                if (_body.ValidPosition())
+                if (_body.ValidPosition(CurrentDirection * 0.5f + new Vector3(0, -0.5f, 0)))
                     CurrentDirection *= -1;
-                _body.Object.Transform = originalPosition;
 
-                _body.Object.Translate(testDirection);
-                if (!_body.ValidPosition())
+                if (!_body.ValidPosition(CurrentDirection * (float)deltaTime.TotalSeconds))
                     CurrentDirection *= -1;
-                _body.Object.Transform = originalPosition;
             }
 
             _body.Push(CurrentDirection);

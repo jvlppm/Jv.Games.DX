@@ -15,7 +15,12 @@ namespace Jv.Games.DX.Test.Objects
         static Vector2[] BottomUV = new[] { new Vector2(0.524218458274316f, 0.303583667874278f), new Vector2(0.561999253182249f, 0.302359737589347f), new Vector2(0.562967991513221f, 0.347645158131793f), new Vector2(0.522280981612371f, 0.347645158131793f) };
         static Vector2[] UV = new[] { new Vector2(0.500968738330973f, 0.368451972975619f), new Vector2(0.707310002828144f, 0.368451972975619f), new Vector2(0.706341264497171f, 0.631596984235778f), new Vector2(0.5f, 0.631596984235778f) };
 
-        float? _toMove;
+        float _currentMove;
+        const float MaxMove = 0.3f;
+        bool _destroy;
+        int _moveDirection = 1;
+        bool _moving;
+        Matrix _originalPosition;
 
         public BrickBlock(Device device)
         {
@@ -30,26 +35,42 @@ namespace Jv.Games.DX.Test.Objects
             Add(new AxisAlignedBoxCollider());
 
             Add(new Trigger(c => {
+
                 var body = c.Object.SearchComponent<RigidBody>();
-                if (body.Momentum.Y < 0)
+                if (body == null || body.Momentum.Y < 0)
                     return;
 
-                if (_toMove == null)
-                    _toMove = 0.3f;
+                if(_moving)
+                    return;
+                _moving = true;
+                _originalPosition = Transform;
+
+                _moveDirection = 1;
+
+                var mario = c.Object as Mario;
+                _destroy = mario != null && !mario.IsSmall;
             }, 1, 0.5f, 1, new Vector3(0, -0.5f, 0)));
         }
 
         public void Update(System.TimeSpan deltaTime)
         {
-            if (_toMove == null)
+            if (!_moving)
                 return;
 
-            Translate(new Vector3(0, (float)deltaTime.TotalSeconds * 2, 0));
-            _toMove -= (float)deltaTime.TotalSeconds * 2;
+            var delta = (float)deltaTime.TotalSeconds * 2 * _moveDirection;
 
-            if (_toMove < 0) {
-                _toMove = null;
-                Dispose();
+            Translate(new Vector3(0, delta, 0));
+            _currentMove += delta;
+
+            if (_currentMove > MaxMove && _moveDirection > 0) {
+                _moveDirection *= -1;
+                if(_destroy)
+                    Dispose();
+            }
+            if(_currentMove < 0 && _moveDirection < 0)
+            {
+                _moving = false;
+                Transform = _originalPosition;
             }
         }
     }

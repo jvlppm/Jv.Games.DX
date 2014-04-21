@@ -172,7 +172,7 @@ namespace Jv.Games.DX
                     {
                         foreach (var info in kvT.Value)
                         {
-                            if (!info.Object.Visible)
+                            if (!info.Object.CanRender())
                                 continue;
 
                             var mesh = info.Renderer.Mesh;

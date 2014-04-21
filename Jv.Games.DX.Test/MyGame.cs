@@ -14,10 +14,6 @@ namespace Jv.Games.DX.Test
 
         public void Setup(Device device, GameWindow window)
         {
-#if DEBUG
-            window.TopMost = true;
-#endif
-
             _scene = new Level(window, device, 1);
             _scene.Init();
         }
