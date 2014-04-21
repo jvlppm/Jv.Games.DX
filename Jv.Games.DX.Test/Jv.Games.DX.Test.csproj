@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Behaviors\Controller.cs" />
     <Compile Include="Behaviors\Follow.cs" />
+    <Compile Include="Behaviors\LookForward.cs" />
     <Compile Include="Behaviors\Mover.cs" />
     <Compile Include="Behaviors\Rotating.cs" />
     <Compile Include="Behaviors\LookAtObject.cs" />

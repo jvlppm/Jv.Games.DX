@@ -97,8 +97,7 @@ namespace Jv.Games.DX.Test
                                 if (_player == null)
                                     _player = Add(new Mario(device));
 
-                                _player.Transform = Matrix.RotationY(MathUtil.DegreesToRadians(-90))
-                                                  * Matrix.Translation(x, y + 0.5f, 0);
+                                _player.Transform = Matrix.Translation(x, y + 0.5f, 0);
 
                                 _oldStartPos = new Vector2(x, y);
                             }

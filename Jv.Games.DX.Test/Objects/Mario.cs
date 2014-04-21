@@ -71,6 +71,7 @@ namespace Jv.Games.DX.Test.Objects
             Add(_rigidBody);
             Add(new Mover { Direction = new Vector3(0, -9.8f, 0), Acceleration = true, Continuous = true });
             Add(new Controller { MinJumpForce = 2, MaxJumpForce = 4.91f, MoveForce = 20 });
+            Add(new LookForward());
         }
 
         void CreateBody(Device device, Texture texture)
