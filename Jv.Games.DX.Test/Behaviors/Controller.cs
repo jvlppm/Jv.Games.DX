@@ -20,7 +20,8 @@ namespace Jv.Games.DX.Test.Behaviors
         public float MinJumpForce = 1;
         public float AdditionalForceDelay = 4;
         public float AdditionalForce = 40;
-        public float MoveForce = 1;
+        public float MoveForce = 20;
+        public float RunningForce = 30;
 
 
         public override void Init()
@@ -68,11 +69,13 @@ namespace Jv.Games.DX.Test.Behaviors
                 _canJump = true;
             }
 
+            var move = state.IsKeyDown(Keys.ShiftKey) ? RunningForce : MoveForce;
+
             if (state.IsKeyDown(Keys.Right))
-                _rigidBody.Push(new SharpDX.Vector3(MoveForce, 0, 0));
+                _rigidBody.Push(new SharpDX.Vector3(move, 0, 0));
 
             if (state.IsKeyDown(Keys.Left))
-                _rigidBody.Push(new SharpDX.Vector3(-MoveForce, 0, 0));
+                _rigidBody.Push(new SharpDX.Vector3(-move, 0, 0));
         }
     }
 }

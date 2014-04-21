@@ -75,7 +75,7 @@ namespace Jv.Games.DX.Test.Objects
 
         void LoadBehaviors()
         {
-            _rigidBody = new RigidBody { MaxSpeed = new Vector3(2, 10, 2), Friction = new Vector3(8f, 0, 8f) };
+            _rigidBody = new RigidBody { MaxSpeed = new Vector3(4, 10, 4), Friction = new Vector3(8f, 0, 8f) };
             Add(_rigidBody);
             Add(new Gravity());
             Add(new Controller { MinJumpForce = 2, MoveForce = 20 });

@@ -58,7 +58,7 @@ namespace Jv.Games.DX.Test
                 camera.SetPerspective(60, window.Width / (float)window.Height, 1, 5000);
                 //camera.SetOrthographic(20, 20 * (window.Height / (float)window.Width), 1, 5000);
 
-                camera.Translate(_player.Transform.TranslationVector.X, _player.Transform.TranslationVector.Y + 4, _player.Transform.TranslationVector.Z - 30);
+                camera.Translate(_player.Transform.TranslationVector.X, _player.Transform.TranslationVector.Y + 4, _player.Transform.TranslationVector.Z - 15);
                 Add(camera);
             }
         }
