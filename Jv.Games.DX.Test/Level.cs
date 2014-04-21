@@ -103,6 +103,10 @@ namespace Jv.Games.DX.Test
                             }
                             break;
 
+                        case 'G':
+                            _map.Add(new Goomba(device)).Translate(x, y, 0);
+                            break;
+
                         case '?':
                             _map.Add(new ItemBlock(device)).Translate(x, y, 0);
                             break;

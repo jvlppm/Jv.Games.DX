@@ -146,7 +146,7 @@ namespace Jv.Games.DX
         {
             foreach (var obj in Updateables)
             {
-                if(obj.Owner.Enabled)
+                if(obj.Owner.Enabled && !RemoveUpdateables.Contains(obj))
                     obj.Item.Update(deltaTime);
             }
 

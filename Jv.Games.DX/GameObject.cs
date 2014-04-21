@@ -14,10 +14,12 @@ namespace Jv.Games.DX
 
         List<GameObject> _children;
         List<Components.Component> _components;
+        IDisposable _sceneRegistration;
 
         public GameObject Parent;
         public bool Visible = true;
         public bool Enabled = true;
+        public string Tag;
         #endregion
 
         #region Constructors
@@ -85,15 +87,18 @@ namespace Jv.Games.DX
             if (_disposed)
                 throw new ObjectDisposedException(GetType().FullName);
 
-            if (component.Object != null)
+            if (component.Attached)
                 throw new InvalidOperationException("Specified component already have an associated object.");
-            component.Object = this;
+            component.Attached = true;
+
+            component.Object = component.Object ?? this;
             _components.Add(component);
             return this;
         }
         public void Dettach(Components.Component component)
         {
-            _components.Remove(component);
+            if(_components.Remove(component))
+                component.Attached = false;
         }
 
         public T GetParent<T>()
@@ -112,6 +117,13 @@ namespace Jv.Games.DX
 
         public virtual void Init()
         {
+            if (!(this is Scene))
+            {
+                if (_sceneRegistration != null)
+                    throw new InvalidOperationException("This GameObject is already registered in a scene.");
+                _sceneRegistration = GetParent<Scene>().Register(this);
+            }
+
             foreach (var cmp in _components)
                 cmp.Init();
 
@@ -142,6 +154,9 @@ namespace Jv.Games.DX
             {
                 if (Parent != null)
                     Parent._children.Remove(this);
+
+                if (_sceneRegistration != null)
+                    _sceneRegistration.Dispose();
 
                 foreach (var cmp in _components)
                 {

@@ -51,7 +51,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviors\Blink.cs" />
+    <Compile Include="Behaviors\HitOnTrigger.cs" />
     <Compile Include="Behaviors\Controller.cs" />
+    <Compile Include="Behaviors\Bouncy.cs" />
+    <Compile Include="Behaviors\DieOnTrigger.cs" />
     <Compile Include="Behaviors\Follow.cs" />
     <Compile Include="Behaviors\LookForward.cs" />
     <Compile Include="Behaviors\Mover.cs" />
@@ -70,6 +74,7 @@
     <Compile Include="Mesh\TriangleGrid.cs" />
     <Compile Include="MyGame.cs" />
     <Compile Include="Mesh\Cube.cs" />
+    <Compile Include="Objects\Goomba.cs" />
     <Compile Include="Objects\ItemBlock.cs" />
     <Compile Include="Objects\BrickBlock.cs" />
     <Compile Include="Objects\Mario.cs" />
@@ -105,6 +110,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Assets\Textures\block_question.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\Textures\goomba.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Content Include="Materials\texture.fx">

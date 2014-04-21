@@ -6,6 +6,7 @@ namespace Jv.Games.DX.Components
     {
         IDisposable _sceneRegistration;
         public GameObject Object;
+        internal bool Attached;
 
         public virtual void Init()
         {

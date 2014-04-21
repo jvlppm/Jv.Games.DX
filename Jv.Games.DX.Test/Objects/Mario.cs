@@ -40,6 +40,8 @@ namespace Jv.Games.DX.Test.Objects
 
         public Mario(Device device)
         {
+            Tag = "player";
+
             var texture = Texture.FromFile(device, "Assets/Textures/new-mario.png");
 
             LoadBehaviors();
@@ -83,6 +85,7 @@ namespace Jv.Games.DX.Test.Objects
                 (_collider = new Components.AxisAlignedBoxCollider())
                 //new Behaviors.LookForward()
             });
+            container.Tag = Tag;
 
             // Body container poderá rotacionar no seu eixo X, sem que a direção seja impactada
             var bodyContainer = container.Add(new GameObject());
