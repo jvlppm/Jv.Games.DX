@@ -129,7 +129,7 @@ namespace Jv.Games.DX.Components
                         other.Object.SendMessage("OnTrigger", true, Collider);
                     }
 
-                    if (!Collider.IsTrigger || !other.IsTrigger)
+                    if (!Collider.IsTrigger && !other.IsTrigger)
                         return false;
                 }
             }

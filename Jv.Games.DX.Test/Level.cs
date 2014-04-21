@@ -104,7 +104,7 @@ namespace Jv.Games.DX.Test
                             break;
 
                         case 'G':
-                            _map.Add(new Goomba(device)).Translate(x, y, 0);
+                            _map.Add(new Goomba(device)).Translate(x, y + 0.5f, 0);
                             break;
 
                         case '?':

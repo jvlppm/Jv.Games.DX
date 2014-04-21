@@ -24,7 +24,9 @@ namespace Jv.Games.DX.Test.Objects
         public Goomba(Device device)
         {
             Tag = "npc";
-            Add(new RigidBody());
+            Add(new Gravity());
+            Add(new RandomWalk());
+            Add(new RigidBody { MaxSpeed = new Vector3(0.4f, float.PositiveInfinity, 0), Friction = new Vector3(3) });
             Add(new AxisAlignedBoxCollider());
             Add(new GameObject { new LookForward() })
                 .Add(new GameObject {

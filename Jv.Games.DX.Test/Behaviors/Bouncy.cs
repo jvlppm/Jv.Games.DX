@@ -7,7 +7,7 @@ namespace Jv.Games.DX.Test.Behaviors
 {
     class Bouncy : Components.Component
     {
-        public Vector3 Force = new Vector3(0, 2, 0);
+        public Vector3 Force = new Vector3(0, 1, 0);
         public string[] Tags;
 
         public void OnTrigger(Collider collider)
