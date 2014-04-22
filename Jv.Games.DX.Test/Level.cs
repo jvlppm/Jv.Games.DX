@@ -45,13 +45,15 @@ namespace Jv.Games.DX.Test
                     new LookAtObject(_player),
                     new Follow(_player)
                     {
+                        Speed = 40,
+                        SlowingDist = 5,
                         Offset = new Vector3(0, 4, 0),
                         Mask = new Vector3(1, 1, 0)
                     },
                     new RigidBody
                     {
-                        Friction = new Vector3(10),
-                        MaxSpeed = new Vector3(5f)
+                        Friction = new Vector3(8, 20, 8),
+                        //MaxSpeed = new Vector3(5f)
                     }
                 };
                 camera.Viewport = new SharpDX.Viewport(0, 0, window.Width, window.Height);
@@ -176,6 +178,21 @@ namespace Jv.Games.DX.Test
 
             if (deltaTime > MaxFrameDelay)
                 deltaTime = MaxFrameDelay;
+
+            foreach(var u in Updateables)
+            {
+                u.Owner.Enabled = false;
+                var pos = u.Owner.GlobalTransform.TranslationVector;
+                foreach(var cam in Cameras)
+                {
+                    var posC = cam.GlobalTransform.TranslationVector;
+                    if ((new Vector2(posC.X - pos.X, posC.Y - pos.Y)).Length() < 30)
+                    {
+                        u.Owner.Enabled = true;
+                        break;
+                    }
+                }
+            }
 
             base.Update(device, deltaTime);
         }

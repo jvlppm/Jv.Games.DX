@@ -15,6 +15,8 @@ namespace Jv.Games.DX.Test.Behaviors
         RigidBody _rigidBody;
         RigidBody _targetBody;
 
+        public float SlowingDist = 5;
+
         public Vector3 Offset;
         public float Speed = 20;
 
@@ -36,8 +38,8 @@ namespace Jv.Games.DX.Test.Behaviors
             var dist = (d * Mask).Length();
 
             float moveSpeed = 0;
-            if (dist <= 1)
-                moveSpeed = 0.1f;
+            if (dist <= SlowingDist)
+                moveSpeed = Speed * (dist / SlowingDist);
             else
                 moveSpeed = Speed;
 

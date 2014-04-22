@@ -20,16 +20,16 @@ namespace Jv.Games.DX
             public EffectHandle Technique;
         }
 
-        struct Registration<Type>
+        protected struct Registration<Type>
         {
             public GameObject Owner;
             public Type Item;
         }
 
         readonly Device _device;
-        List<Registration<IUpdateable>> Updateables;
+        protected List<Registration<IUpdateable>> Updateables;
         List<Registration<IUpdateable>> RemoveUpdateables;
-        List<Camera> Cameras;
+        protected List<Camera> Cameras;
         List<Collider> _colliders;
         Dictionary<string, Effect> ShadersByName;
         Dictionary<string, Dictionary<string, List<RenderInfo>>> RenderersByTechnique;
