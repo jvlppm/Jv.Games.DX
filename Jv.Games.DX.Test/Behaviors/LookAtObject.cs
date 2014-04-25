@@ -11,11 +11,11 @@ namespace Jv.Games.DX.Test.Behaviors
     class LookAtObject : Components.Component, IUpdateable
     {
         Camera _camera;
-        GameObject _target;
+        public GameObject Target;
 
         public LookAtObject(GameObject target)
         {
-            _target = target;
+            Target = target;
         }
 
         public override void Init()
@@ -27,7 +27,7 @@ namespace Jv.Games.DX.Test.Behaviors
         public void Update(TimeSpan deltaTime)
         {
             var eye = _camera.GlobalTransform.TranslationVector;
-            var center = _target.GlobalTransform.TranslationVector;
+            var center = Target.GlobalTransform.TranslationVector;
             var up = new Vector3(0, 1, 0);
 
             _camera.View = Matrix.LookAtLH(eye, center, up);

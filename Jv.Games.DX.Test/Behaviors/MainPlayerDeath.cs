@@ -57,7 +57,7 @@ namespace Jv.Games.DX.Test.Behaviors
                     case State.DelayCompleted:
                         _deadBody.Push(new SharpDX.Vector3(0, _jumpForce, 0), true, true);
                         _state = State.WaitingUpAndDown;
-                        _deathHeight = _deadObject.GlobalTransform.TranslationVector.Y;
+                        _deathHeight = _deadObject.GlobalTransform.TranslationVector.Y - 5;
                         break;
 
                     case State.WaitingUpAndDown:
@@ -95,6 +95,7 @@ namespace Jv.Games.DX.Test.Behaviors
         bool _dead;
         AnimationController _controller;
 
+        public event EventHandler OnDeathStarted;
         public event EventHandler OnDeathFinalized;
         public float JumpForce = 5;
         public TimeSpan Delay = TimeSpan.FromSeconds(0.2);
@@ -103,6 +104,9 @@ namespace Jv.Games.DX.Test.Behaviors
         {
             if (_dead)
                 return;
+
+            if (OnDeathStarted != null)
+                OnDeathStarted(this, EventArgs.Empty);
 
             _dead = true;
 

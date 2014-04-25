@@ -111,8 +111,20 @@ namespace Jv.Games.DX.Test
                                 {
                                     _player = (Mario)Add(new Mario(device));
                                     var deathController = _player.SearchComponent<MainPlayerDeath>();
+                                    GameObject dummyCameraTarget = null;
+                                    deathController.OnDeathStarted += delegate {
+                                        dummyCameraTarget = Add(new GameObject());
+                                        dummyCameraTarget.Translate(_player.GlobalTransform.TranslationVector);
+                                        _camera.SearchComponent<LookAtObject>().Target = dummyCameraTarget;
+                                    };
                                     deathController.OnDeathFinalized += delegate
                                     {
+                                        if (dummyCameraTarget != null)
+                                        {
+                                            dummyCameraTarget.Dispose();
+                                            dummyCameraTarget = null;
+                                        }
+                                        _camera.SearchComponent<LookAtObject>().Target = _player;
                                         deathController.Reset();
                                         ReloadScene(device);
                                         _player.Enabled = true;
