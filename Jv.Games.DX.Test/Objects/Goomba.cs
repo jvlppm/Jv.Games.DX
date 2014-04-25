@@ -31,7 +31,7 @@ namespace Jv.Games.DX.Test.Objects
             Add(new Gravity());
             Add(new RandomWalk { CurrentDirection = new Vector3(-1, 0, 0) });
             Add(new RigidBody { MaxSpeed = new Vector3(0.4f, float.PositiveInfinity, 0), Friction = new Vector3(3) });
-            Add(new AxisAlignedBoxCollider());
+            Add(new GameObject { new AxisAlignedBoxCollider { RadiusWidth = 0.45f, RadiusDepth = 0.45f, RadiusHeight = 0.01f } }).Translate(0, -0.49f, 0);
             Add(new GameObject { new LookForward() })
                 .Add(new GameObject {
                     new SwingWhileMoving(new Vector3(0, 0, 1)) { Speed = 15, MaxSwing = 0.1f} })
@@ -51,9 +51,9 @@ namespace Jv.Games.DX.Test.Objects
 
             Add(new GameObject
             {
-                new AxisAlignedBoxCollider { IsTrigger = true, RadiusWidth = 1.125f / 2, RadiusHeight = 0.8f / 2, RadiusDepth = 1.125f / 2 },
+                new AxisAlignedBoxCollider { IsTrigger = true, RadiusWidth = 1f / 2, RadiusHeight = 0.8f / 2, RadiusDepth = 1f / 2 },
                 new HitOnTrigger { Object = this, Tags = new [] { "player" } }
-            }).Translate(0, 0, -0.25f);
+            }).Translate(0, 0, -0.5f);
 
             Transform *= Matrix.Scaling(0.8f);
         }
