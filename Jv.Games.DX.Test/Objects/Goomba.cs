@@ -51,9 +51,9 @@ namespace Jv.Games.DX.Test.Objects
 
             Add(new GameObject
             {
-                new AxisAlignedBoxCollider { IsTrigger = true, RadiusWidth = 1.25f / 2, RadiusHeight = 0.8f / 2, RadiusDepth = 1.25f / 2 },
+                new AxisAlignedBoxCollider { IsTrigger = true, RadiusWidth = 1.125f / 2, RadiusHeight = 0.8f / 2, RadiusDepth = 1.125f / 2 },
                 new HitOnTrigger { Object = this, Tags = new [] { "player" } }
-            });
+            }).Translate(0, 0, -0.25f);
 
             Transform *= Matrix.Scaling(0.8f);
         }
