@@ -12,7 +12,7 @@ namespace Jv.Games.DX.Components
         {
             if (_sceneRegistration != null)
                 throw new InvalidOperationException("This component is already registered in a scene.");
-            _sceneRegistration = Object.GetParent<Scene>().Register(this);
+            _sceneRegistration = Object.GetAncestor<Scene>().Register(this);
         }
 
         ~Component()

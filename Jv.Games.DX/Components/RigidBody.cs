@@ -26,7 +26,7 @@ namespace Jv.Games.DX.Components
 
         public override void Init()
         {
-            _scene = Object.GetParent<Scene>();
+            _scene = Object.GetAncestor<Scene>();
             Collider = Collider ?? Object.SearchComponent<Collider>();
             base.Init();
         }

@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace Jv.Games.DX
 {
-    public interface IMesh
+    public interface IMesh: IDisposable
     {
         SharpDX.Direct3D9.VertexBuffer VertexBuffer { get; }
         SharpDX.Direct3D9.IndexBuffer IndexBuffer { get; }
@@ -18,6 +18,8 @@ namespace Jv.Games.DX
     public class Mesh<DataType> : IMesh
         where DataType : struct
     {
+        bool _disposed;
+
         public SharpDX.Direct3D9.VertexBuffer VertexBuffer { get; private set; }
         public SharpDX.Direct3D9.IndexBuffer IndexBuffer { get; private set; }
         public int NumVertices { get; private set; }
@@ -52,6 +54,7 @@ namespace Jv.Games.DX
             set
             {
                 IndexBuffer = new SharpDX.Direct3D9.IndexBuffer(_device, sizeof(ushort) * value.Length, Usage.None, Pool.Managed, true);
+
                 using (var stream = IndexBuffer.LockData())
                     stream.Data.WriteRange(value);
 
@@ -67,6 +70,28 @@ namespace Jv.Games.DX
                         throw new NotImplementedException();
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+
+        ~Mesh()
+        {
+            Dispose(false);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            _disposed = true;
+            VertexBuffer.Dispose();
+            IndexBuffer.Dispose();
         }
     }
 }

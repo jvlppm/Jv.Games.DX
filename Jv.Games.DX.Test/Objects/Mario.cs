@@ -77,6 +77,7 @@ namespace Jv.Games.DX.Test.Objects
         {
             _rigidBody = new RigidBody { MaxSpeed = new Vector3(4, 10, 4), Friction = new Vector3(8f, 0, 8f) };
             Add(_rigidBody);
+            Add(new MainPlayerDeath());
             Add(new Gravity());
             Add(new Controller { MinJumpForce = 2, MoveForce = 20 });
             Add(new LookForward());
@@ -191,8 +192,13 @@ namespace Jv.Games.DX.Test.Objects
         }
 
         public void OnHit() {
-            if(!_blink.IsActive)
+            if(_blink.IsActive)
+                return;
+
+            if (!IsSmall)
                 IsSmall = true;
+            else
+                SendMessage("OnDeath", true);
         }
 
         public void onTrigger(Components.Collider collider) {

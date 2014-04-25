@@ -7,7 +7,7 @@ namespace Jv.Games.DX.Test.Behaviors
     class Mover : Components.Component, IUpdateable
     {
         bool _apply = true;
-        RigidBody _rigidBody;
+        public RigidBody RigidBody;
 
         public bool Continuous = true;
         public bool Acceleration = false;
@@ -15,7 +15,7 @@ namespace Jv.Games.DX.Test.Behaviors
 
         public override void Init()
         {
-            _rigidBody = Object.SearchComponent<RigidBody>();
+            RigidBody = RigidBody ?? Object.SearchComponent<RigidBody>();
             base.Init();
         }
 
@@ -23,7 +23,7 @@ namespace Jv.Games.DX.Test.Behaviors
         {
             if (_apply || Continuous)
             {
-                _rigidBody.Push(Direction, !Continuous, Acceleration);
+                RigidBody.Push(Direction, !Continuous, Acceleration);
                 _apply = false;
             }
         }

@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Behaviors\Blink.cs" />
     <Compile Include="Behaviors\Gravity.cs" />
+    <Compile Include="Behaviors\MainPlayerDeath.cs" />
     <Compile Include="Behaviors\RandomWalk.cs" />
     <Compile Include="Behaviors\HitOnTrigger.cs" />
     <Compile Include="Behaviors\Controller.cs" />

@@ -28,7 +28,8 @@ namespace Jv.Games.DX
 
         readonly Device _device;
         protected List<Registration<IUpdateable>> Updateables;
-        List<Registration<IUpdateable>> RemoveUpdateables;
+        Queue<Registration<IUpdateable>> AddUpdateables;
+        Queue<Registration<IUpdateable>> RemoveUpdateables;
         protected List<Camera> Cameras;
         List<Collider> _colliders;
         Dictionary<string, Effect> ShadersByName;
@@ -42,7 +43,8 @@ namespace Jv.Games.DX
             _device = device;
             Cameras = new List<Camera>();
             Updateables = new List<Registration<IUpdateable>>();
-            RemoveUpdateables = new List<Registration<IUpdateable>>();
+            AddUpdateables = new Queue<Registration<IUpdateable>>();
+            RemoveUpdateables = new Queue<Registration<IUpdateable>>();
             ShadersByName = new Dictionary<string, Effect>();
             RenderersByTechnique = new Dictionary<string, Dictionary<string, List<RenderInfo>>>();
             SortedRendereres = new List<RenderInfo>();
@@ -95,8 +97,8 @@ namespace Jv.Games.DX
         IDisposable RegisterUpdateable(GameObject owner, IUpdateable updateable)
         {
             var reg = new Registration<IUpdateable> { Item = updateable, Owner = owner };
-            Updateables.Add(reg);
-            return Disposable.Create(() => RemoveUpdateables.Add(reg));
+            AddUpdateables.Enqueue(reg);
+            return Disposable.Create(() => RemoveUpdateables.Enqueue(reg));
         }
 
         IDisposable RegisterCamera(Camera camera)
@@ -144,14 +146,17 @@ namespace Jv.Games.DX
 
         public virtual void Update(Device device, TimeSpan deltaTime)
         {
+            while (AddUpdateables.Count > 0)
+                Updateables.Add(AddUpdateables.Dequeue());
+
             foreach (var obj in Updateables)
             {
-                if(obj.Owner.Enabled && !RemoveUpdateables.Contains(obj))
+                if(obj.Owner.CanUpdate() && !RemoveUpdateables.Contains(obj))
                     obj.Item.Update(deltaTime);
             }
 
-            foreach (var obj in RemoveUpdateables)
-                Updateables.Remove(obj);
+            while(RemoveUpdateables.Count > 0)
+                Updateables.Remove(RemoveUpdateables.Dequeue());
             RemoveUpdateables.Clear();
         }
 

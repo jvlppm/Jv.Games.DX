@@ -101,10 +101,10 @@ namespace Jv.Games.DX
                 component.Attached = false;
         }
 
-        public T GetParent<T>()
+        public T GetAncestor<T>()
             where T : GameObject
         {
-            var current = Parent;
+            var current = this;
             while (current != null && !(current is T))
                 current = current.Parent;
 
@@ -126,6 +126,19 @@ namespace Jv.Games.DX
             } while (current != null);
             return true;
         }
+
+        public bool CanUpdate()
+        {
+            var current = this;
+            do
+            {
+                if (!current.Enabled)
+                    return false;
+
+                current = current.Parent;
+            } while (current != null);
+            return true;
+        }
         #endregion
 
         public virtual void Init()
@@ -134,7 +147,7 @@ namespace Jv.Games.DX
             {
                 if (_sceneRegistration != null)
                     throw new InvalidOperationException("This GameObject is already registered in a scene.");
-                _sceneRegistration = GetParent<Scene>().Register(this);
+                _sceneRegistration = GetAncestor<Scene>().Register(this);
             }
 
             foreach (var cmp in _components)
