@@ -15,6 +15,7 @@ namespace Jv.Games.DX.Test.Behaviors
     {
         RigidBody _rigidBody;
         float _spareJumpForce;
+        TimeSpan _holdingJump;
         bool _canJump = true;
 
         public float MinJumpForce = 1;
@@ -22,6 +23,7 @@ namespace Jv.Games.DX.Test.Behaviors
         public float AdditionalForce = 40;
         public float MoveForce = 20;
         public float RunningForce = 30;
+        public TimeSpan JumpTimeRange = TimeSpan.FromSeconds(0.2);
 
 
         public override void Init()
@@ -32,7 +34,7 @@ namespace Jv.Games.DX.Test.Behaviors
 
         bool IsOnFloor()
         {
-            if (_rigidBody.Momentum.Y != 0)
+            if (_rigidBody.Momentum.Y > 0)
                 return false;
 
             return !_rigidBody.ValidPosition(new Vector3(0, -0.25f, 0));
@@ -44,15 +46,21 @@ namespace Jv.Games.DX.Test.Behaviors
 
             if (_canJump && IsOnFloor())
             {
-                if (state.IsKeyDown(Keys.Space))
+                if (state.IsKeyDown(Keys.Space) || state.IsKeyDown(Keys.Up))
                 {
-                    _rigidBody.Push(new Vector3(0, MinJumpForce, 0), true, true);
-                    _spareJumpForce = AdditionalForceDelay;
-                    _canJump = false;
+                    if (_holdingJump < JumpTimeRange)
+                    {
+                        _rigidBody.Push(new Vector3(0, MinJumpForce, 0), true, true);
+                        _spareJumpForce = AdditionalForceDelay;
+                        _holdingJump += deltaTime;
+                    }
                 }
+                else
+                    _holdingJump = TimeSpan.Zero;
             }
-            else if (state.IsKeyDown(Keys.Space))
+            else if (state.IsKeyDown(Keys.Space) || state.IsKeyDown(Keys.Up))
             {
+                _holdingJump += deltaTime;
                 if (_spareJumpForce > 0 && _rigidBody.Momentum.Y > 0)
                 {
                     var addToJump = (float)deltaTime.TotalSeconds * AdditionalForce;
@@ -65,6 +73,7 @@ namespace Jv.Games.DX.Test.Behaviors
             }
             else
             {
+                _holdingJump = TimeSpan.Zero;
                 _spareJumpForce = 0;
                 _canJump = true;
             }
