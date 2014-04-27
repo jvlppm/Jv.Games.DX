@@ -9,11 +9,20 @@ namespace Jv.Games.DX.Test.Behaviors
         float _currentMove;
         const float MaxMove = 0.3f;
         public Func<Collider, bool> CanDestroy;
-        int _moveDirection = 1;
+        int _moveDirection = 1, _lastDirection;
         bool _moving;
         Matrix _originalPosition;
-        public Func<Collider, bool> Validate;
         Collider _lastCollider;
+        public bool ValidatePosition;
+        RigidBody _body;
+
+        public override void Init()
+        {
+            _body = Object.SearchComponent<RigidBody>();
+            if (_body == null && ValidatePosition)
+                throw new InvalidOperationException("No RigidBody found");
+            base.Init();
+        }
 
         public void OnCollide(Collider collider)
         {
@@ -23,13 +32,10 @@ namespace Jv.Games.DX.Test.Behaviors
             _lastCollider = collider;
 
             var body = collider.Object.SearchComponent<RigidBody>();
-            if (body.Momentum.Y < 0)
+            if (body == null || body.Momentum.Y < 0)
                 return;
 
             if (!ValidCollision(collider))
-                return;
-
-            if (Validate != null && !Validate(collider))
                 return;
 
             Object.SendMessage("OnHeadStomp", true, collider);
@@ -61,10 +67,17 @@ namespace Jv.Games.DX.Test.Behaviors
 
         public void Update(System.TimeSpan deltaTime)
         {
+            var delta = (float)deltaTime.TotalSeconds * 2 * _moveDirection;
+
+            if (ValidatePosition && !_body.ValidPosition(Vector3.Zero))
+                _body.Push(new Vector3(2 * _lastDirection, 3, _body.Momentum.Z), true);
+            else if (_body != null)
+                _lastDirection = _body.Momentum.X > 0? 1 : -1;
+
             if (!_moving)
                 return;
 
-            var delta = (float)deltaTime.TotalSeconds * 2 * _moveDirection;
+
 
             Object.Translate(new Vector3(0, delta, 0));
             _currentMove += delta;
@@ -79,7 +92,8 @@ namespace Jv.Games.DX.Test.Behaviors
             {
                 _moving = false;
                 _moveDirection *= -1;
-                Object.Transform = _originalPosition;
+                if (!ValidatePosition)
+                    Object.Transform = _originalPosition;
             }
         }
     }

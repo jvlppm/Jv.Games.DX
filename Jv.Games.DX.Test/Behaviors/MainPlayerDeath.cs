@@ -105,13 +105,16 @@ namespace Jv.Games.DX.Test.Behaviors
             if (_dead)
                 return;
 
+            Object.SearchComponent<Collider>().IsTrigger = true;
+            Object.SearchComponent<RigidBody>().Momentum = new SharpDX.Vector3(0, 0, 1);
+            Object.SearchComponent<LookForward>().Update(TimeSpan.Zero);
+            Object.SearchComponent<RigidBody>().Momentum = SharpDX.Vector3.Zero;
+
+
             if (OnDeathStarted != null)
                 OnDeathStarted(this, EventArgs.Empty);
 
             _dead = true;
-
-            Object.Transform = SharpDX.Matrix.Translation(Object.Transform.TranslationVector + new SharpDX.Vector3(0, 0.005f, 0));
-            Object.SearchComponent<RigidBody>().Momentum = SharpDX.Vector3.Zero;
 
             Object.Enabled = false;
             _controller = new AnimationController(Object, Delay, JumpForce);
@@ -129,6 +132,8 @@ namespace Jv.Games.DX.Test.Behaviors
 
         void controller_OnDeathFinalized(object sender, EventArgs e)
         {
+            Object.SearchComponent<Collider>().IsTrigger = false;
+
             if (OnDeathFinalized != null)
                 OnDeathFinalized(this, EventArgs.Empty);
 
