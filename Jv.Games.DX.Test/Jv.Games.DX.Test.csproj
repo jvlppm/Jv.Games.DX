@@ -58,12 +58,13 @@
     <Compile Include="Behaviors\HitOnTrigger.cs" />
     <Compile Include="Behaviors\Controller.cs" />
     <Compile Include="Behaviors\Bouncy.cs" />
-    <Compile Include="Behaviors\DieOnTrigger.cs" />
+    <Compile Include="Behaviors\DieOnStomp.cs" />
     <Compile Include="Behaviors\Follow.cs" />
     <Compile Include="Behaviors\LookForward.cs" />
     <Compile Include="Behaviors\Mover.cs" />
     <Compile Include="Behaviors\Rotating.cs" />
     <Compile Include="Behaviors\LookAtObject.cs" />
+    <Compile Include="Behaviors\Stomp.cs" />
     <Compile Include="Behaviors\SwingWhileMoving.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Input\Keyboard.cs" />

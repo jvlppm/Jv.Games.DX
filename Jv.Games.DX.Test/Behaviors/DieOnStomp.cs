@@ -5,14 +5,14 @@ using System.Linq;
 
 namespace Jv.Games.DX.Test.Behaviors
 {
-    class DieOnTrigger : Components.Component, IUpdateable
+    class DieOnStomp : Components.Component, IUpdateable
     {
         bool _dying;
         float _scaleY = 1f;
 
         public string[] Tags;
 
-        public void OnTrigger(Collider collider)
+        public void OnStomp(Collider collider)
         {
             if (Tags == null || (collider.Object != null && Tags.Contains(collider.Object.Tag)))
                 _dying = true;

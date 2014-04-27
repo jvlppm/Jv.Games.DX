@@ -79,7 +79,7 @@ namespace Jv.Games.DX.Test.Objects
             Add(_rigidBody);
             Add(new MainPlayerDeath());
             Add(new Gravity());
-            Add(new Controller { MinJumpForce = 2, MoveForce = 20 });
+            Add(new Controller { MoveForce = 20 });
             Add(new LookForward());
             _blink = new Blink();
             Add(_blink);

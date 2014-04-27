@@ -125,6 +125,8 @@ namespace Jv.Games.DX.Components
             if (Collider == null)
                 return true;
 
+            bool result = true;
+
             foreach (var other in _scene.Colliders)
             {
                 if (other == Collider)
@@ -134,19 +136,18 @@ namespace Jv.Games.DX.Components
                 {
                     if (notifyColliders)
                     {
-                        if (Collider.IsTrigger || other.IsTrigger)
-                        {
-                            Object.SendMessage("OnTrigger", true, other);
-                            other.Object.SendMessage("OnTrigger", true, Collider);
-                        }
+                        string message = Collider.IsTrigger || other.IsTrigger ?
+                                            "OnTrigger" : "OnCollide";
+                        Object.SendMessage(message, true, other);
+                        other.Object.SendMessage(message, true, Collider);
                     }
 
                     if (!Collider.IsTrigger && !other.IsTrigger)
-                        return false;
+                        result = false;
                 }
             }
 
-            return true;
+            return result;
         }
 
         public void Push(Vector3 force, bool instantaneous = false, bool acceleration = false)

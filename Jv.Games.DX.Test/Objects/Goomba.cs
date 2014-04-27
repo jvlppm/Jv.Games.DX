@@ -31,7 +31,9 @@ namespace Jv.Games.DX.Test.Objects
             Add(new Gravity());
             Add(new RandomWalk { CurrentDirection = new Vector3(-1, 0, 0) });
             Add(new RigidBody { MaxSpeed = new Vector3(0.4f, float.PositiveInfinity, 0), Friction = new Vector3(3) });
-            Add(new GameObject { new AxisAlignedBoxCollider { RadiusWidth = 0.45f, RadiusDepth = 0.45f, RadiusHeight = 0.01f } }).Translate(0, -0.49f, 0);
+            Add(new AxisAlignedBoxCollider { RadiusWidth = 0.45f, RadiusDepth = 0.45f, RadiusHeight = 0.45f });
+            Add(new Stomp { Tags = new[] { "player" } });
+            Add(new DieOnStomp { Tags = new[] { "player" } });
             Add(new GameObject { new LookForward() })
                 .Add(new GameObject {
                     new SwingWhileMoving(new Vector3(0, 0, 1)) { Speed = 15, MaxSwing = 0.1f} })
@@ -40,20 +42,6 @@ namespace Jv.Games.DX.Test.Objects
                         Mesh = new TexturedCube(device, 1, 1, 1, FrontUV, BackUV, LeftUV, RightUV, TopUV, BottomUV),
                         Material = new TextureMaterial(Texture, false)
                     });
-
-            var deathHitbox = Add(new GameObject
-            {
-                new AxisAlignedBoxCollider { IsTrigger = true, RadiusWidth = 0.49f, RadiusHeight = 0.1f, RadiusDepth = 0.49f },
-                new Bouncy { Tags = new [] { "player" } },
-                new DieOnTrigger { Object = this, Tags = new [] { "player" } }
-            });
-            deathHitbox.Translate(0, 0.6f, 0);
-
-            Add(new GameObject
-            {
-                new AxisAlignedBoxCollider { IsTrigger = true, RadiusWidth = 1f / 2, RadiusHeight = 0.8f / 2, RadiusDepth = 1f / 2 },
-                new HitOnTrigger { Object = this, Tags = new [] { "player" } }
-            }).Translate(0, 0, -0.5f);
 
             Transform *= Matrix.Scaling(0.8f);
         }

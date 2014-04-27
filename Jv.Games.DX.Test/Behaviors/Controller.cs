@@ -14,13 +14,15 @@ namespace Jv.Games.DX.Test.Behaviors
     class Controller : Components.Component, IUpdateable
     {
         RigidBody _rigidBody;
-        float _spareJumpForce;
         TimeSpan _holdingJump;
-        bool _canJump = true;
+        float _startJumpHeight;
+        float _maxJumpHeight;
 
-        public float MinJumpForce = 1;
+        public float JumpSpeed = 4;
+        public float MinJumpHeight = 0;
+        public float MaxJumpHeight = 2;
         public float AdditionalForceDelay = 4;
-        public float AdditionalForce = 40;
+        public float AdditionalForce = 2;
         public float MoveForce = 20;
         public float RunningForce = 30;
         public TimeSpan JumpTimeRange = TimeSpan.FromSeconds(0.2);
@@ -44,38 +46,39 @@ namespace Jv.Games.DX.Test.Behaviors
         {
             var state = Keyboard.GetState();
 
-            if (_canJump && IsOnFloor())
+            System.Diagnostics.Debug.WriteLine(_holdingJump);
+
+            if (IsOnFloor())
             {
                 if (state.IsKeyDown(Keys.Space) || state.IsKeyDown(Keys.Up))
                 {
-                    if (_holdingJump < JumpTimeRange)
+                    if (_holdingJump < JumpTimeRange && _maxJumpHeight == 0)
                     {
-                        _rigidBody.Push(new Vector3(0, MinJumpForce, 0), true, true);
-                        _spareJumpForce = AdditionalForceDelay;
+                        _rigidBody.Push(new Vector3(0, JumpSpeed, 0), true);
                         _holdingJump += deltaTime;
+                        _startJumpHeight = Object.Transform.TranslationVector.Y;
                     }
                 }
                 else
-                    _holdingJump = TimeSpan.Zero;
-            }
-            else if (state.IsKeyDown(Keys.Space) || state.IsKeyDown(Keys.Up))
-            {
-                _holdingJump += deltaTime;
-                if (_spareJumpForce > 0 && _rigidBody.Momentum.Y > 0)
                 {
-                    var addToJump = (float)deltaTime.TotalSeconds * AdditionalForce;
-                    _spareJumpForce -= addToJump;
-                    if (_spareJumpForce < 0)
-                        _spareJumpForce = 0;
-                    else
-                        this._rigidBody.Push(new Vector3(0, addToJump, 0), true, true);
+                    _holdingJump = TimeSpan.Zero;
+                    _maxJumpHeight = 0;
                 }
             }
             else
             {
-                _holdingJump = TimeSpan.Zero;
-                _spareJumpForce = 0;
-                _canJump = true;
+                var jumpHeight = Object.Transform.TranslationVector.Y - _startJumpHeight;
+                if (_rigidBody.Momentum.Y < JumpSpeed / 2)
+                    _maxJumpHeight = MaxJumpHeight;
+
+                if (jumpHeight > _maxJumpHeight)
+                    _maxJumpHeight = jumpHeight;
+
+                if (_maxJumpHeight > 0 && (_maxJumpHeight < MinJumpHeight || ((state.IsKeyDown(Keys.Space) || state.IsKeyDown(Keys.Up)) && _maxJumpHeight < MaxJumpHeight)))
+                {
+                    _holdingJump += deltaTime;
+                    _rigidBody.Momentum.Y = JumpSpeed;
+                }
             }
 
             var move = state.IsKeyDown(Keys.ShiftKey) ? RunningForce : MoveForce;
