@@ -36,10 +36,10 @@ namespace Jv.Games.DX.Test.Behaviors
 
         bool IsOnFloor()
         {
-            if (_rigidBody.Momentum.Y > 0)
+            if (_rigidBody.Momentum.Y != 0)
                 return false;
 
-            return !_rigidBody.ValidPosition(new Vector3(0, -0.25f, 0));
+            return !_rigidBody.ValidPosition(new Vector3(0, -0.05f, 0));
         }
 
         public void Update(TimeSpan deltaTime)
@@ -48,21 +48,24 @@ namespace Jv.Games.DX.Test.Behaviors
 
             System.Diagnostics.Debug.WriteLine(_holdingJump);
 
+            if (state.IsKeyDown(Keys.Space) || state.IsKeyDown(Keys.Up))
+                _holdingJump += deltaTime;
+            else
+            {
+                _holdingJump = TimeSpan.Zero;
+                _maxJumpHeight = 0;
+            }
+
             if (IsOnFloor())
             {
                 if (state.IsKeyDown(Keys.Space) || state.IsKeyDown(Keys.Up))
                 {
                     if (_holdingJump < JumpTimeRange && _maxJumpHeight == 0)
                     {
+                        _rigidBody.Momentum.Y = 0;
                         _rigidBody.Push(new Vector3(0, JumpSpeed, 0), true);
-                        _holdingJump += deltaTime;
                         _startJumpHeight = Object.Transform.TranslationVector.Y;
                     }
-                }
-                else
-                {
-                    _holdingJump = TimeSpan.Zero;
-                    _maxJumpHeight = 0;
                 }
             }
             else
@@ -76,9 +79,10 @@ namespace Jv.Games.DX.Test.Behaviors
 
                 if (_maxJumpHeight > 0 && (_maxJumpHeight < MinJumpHeight || ((state.IsKeyDown(Keys.Space) || state.IsKeyDown(Keys.Up)) && _maxJumpHeight < MaxJumpHeight)))
                 {
-                    _holdingJump += deltaTime;
                     _rigidBody.Momentum.Y = JumpSpeed;
                 }
+                else
+                    _maxJumpHeight = 0;
             }
 
             var move = state.IsKeyDown(Keys.ShiftKey) ? RunningForce : MoveForce;
