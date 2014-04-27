@@ -25,7 +25,7 @@ namespace Jv.Games.DX.Test.Behaviors
             var pos = Object.GlobalTransform.TranslationVector;
             var col = Object.SearchComponent<AxisAlignedBoxCollider>();
 
-            if (other.Y - box.RadiusHeight > pos.Y - col.RadiusHeight + 0.1f)
+            if (other.Y - box.RadiusHeight > pos.Y)
             {
                 var body = collider.Object.SearchComponent<RigidBody>();
                 if (body != null)

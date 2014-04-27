@@ -34,6 +34,7 @@ namespace Jv.Games.DX.Test.Objects
             Add(new AxisAlignedBoxCollider { RadiusWidth = 0.45f, RadiusDepth = 0.45f, RadiusHeight = 0.45f });
             Add(new Stomp { Tags = new[] { "player" } });
             Add(new DieOnStomp { Tags = new[] { "player" } });
+            Add(new HeadStomp { ValidatePosition = true});
             Add(new GameObject { new LookForward() })
                 .Add(new GameObject {
                     new SwingWhileMoving(new Vector3(0, 0, 1)) { Speed = 15, MaxSwing = 0.1f} })

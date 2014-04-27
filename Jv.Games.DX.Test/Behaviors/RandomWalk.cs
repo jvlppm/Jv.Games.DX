@@ -11,7 +11,7 @@ namespace Jv.Games.DX.Test.Behaviors
     class RandomWalk : Components.Component, IUpdateable
     {
         RigidBody _body;
-        public Vector3 CurrentDirection = new Vector3(1, 0, 0);
+        public Vector3 CurrentDirection = new Vector3(-1, 0, 0);
 
         public float Speed = 1;
         public bool CanFall;

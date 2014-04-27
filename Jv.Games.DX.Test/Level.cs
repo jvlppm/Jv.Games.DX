@@ -129,6 +129,7 @@ namespace Jv.Games.DX.Test
                                         ReloadScene(device);
                                         _player.Enabled = true;
                                         _player.Transform = Matrix.Translation(_oldStartPos);
+                                        _player.SearchComponent<RigidBody>().Momentum = Vector3.Zero;
                                         _player.IsSmall = true;
                                         _player.SearchComponent<Blink>().IsActive = true;
                                         _camera.Transform = _player.Transform * Matrix.Translation(0, 0, -15);
@@ -143,7 +144,7 @@ namespace Jv.Games.DX.Test
                             break;
 
                         case 'G':
-                            _map.Add(new Goomba(device)).Translate(x, y + 0.5f, 0);
+                            _map.Add(new Goomba(device)).Translate(x, y, 0);
                             break;
 
                         case '?':
@@ -227,7 +228,6 @@ namespace Jv.Games.DX.Test
                 {
                     ReloadScene(device);
                     _mapModifyDate = fileDate;
-                    _map.Init();
                 }
             }
 
