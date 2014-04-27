@@ -1,4 +1,5 @@
 ﻿using Jv.Games.DX.Components;
+using Jv.Games.DX.Test.Behaviors;
 using Jv.Games.DX.Test.Materials;
 using Jv.Games.DX.Test.Mesh;
 using SharpDX;
@@ -7,7 +8,7 @@ using System;
 
 namespace Jv.Games.DX.Test.Objects
 {
-    class BrickBlock : GameObject, IUpdateable
+    class BrickBlock : GameObject
     {
         static Texture Texture;
 
@@ -17,7 +18,6 @@ namespace Jv.Games.DX.Test.Objects
 
         float _currentMove;
         const float MaxMove = 0.3f;
-        bool _destroy;
         int _moveDirection = 1;
         bool _moving;
         Matrix _originalPosition;
@@ -33,45 +33,14 @@ namespace Jv.Games.DX.Test.Objects
             });
 
             Add(new AxisAlignedBoxCollider());
-
-            Add(new Trigger(c => {
-
-                var body = c.Object.SearchComponent<RigidBody>();
-                if (body == null || body.Momentum.Y < 0)
-                    return;
-
-                if(_moving)
-                    return;
-                _moving = true;
-                _originalPosition = Transform;
-
-                _moveDirection = 1;
-
-                var mario = c.Object as Mario;
-                _destroy = mario != null && !mario.IsSmall;
-            }, 1, 0.5f, 1, new Vector3(0, -0.5f, 0)));
-        }
-
-        public void Update(System.TimeSpan deltaTime)
-        {
-            if (!_moving)
-                return;
-
-            var delta = (float)deltaTime.TotalSeconds * 2 * _moveDirection;
-
-            Translate(new Vector3(0, delta, 0));
-            _currentMove += delta;
-
-            if (_currentMove > MaxMove && _moveDirection > 0) {
-                _moveDirection *= -1;
-                if(_destroy)
-                    Dispose();
-            }
-            if(_currentMove < 0 && _moveDirection < 0)
+            Add(new HeadStomp
             {
-                _moving = false;
-                Transform = _originalPosition;
-            }
+                CanDestroy = c =>
+                {
+                    var mario = c.Object as Mario;
+                    return mario != null && !mario.IsSmall;
+                }
+            });
         }
     }
 }

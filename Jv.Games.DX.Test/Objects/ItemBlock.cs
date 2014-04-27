@@ -1,4 +1,5 @@
 ﻿using Jv.Games.DX.Components;
+using Jv.Games.DX.Test.Behaviors;
 using Jv.Games.DX.Test.Materials;
 using Jv.Games.DX.Test.Mesh;
 using SharpDX;
@@ -19,8 +20,6 @@ namespace Jv.Games.DX.Test.Objects
 
         public ItemBlock(Device device)
         {
-            Add(new Trigger(OnTrigger, 1, 0.5f, 1, new Vector3(0, -0.5f, 0)));
-
             DefaultTexture = DefaultTexture ?? Texture.FromFile(device, "Assets/Textures/block_question.png");
             EmptyTexture = EmptyTexture ?? Texture.FromFile(device, "Assets/Textures/block_empty.png");
 
@@ -31,14 +30,11 @@ namespace Jv.Games.DX.Test.Objects
             });
 
             Add(new AxisAlignedBoxCollider());
+            Add(new HeadStomp());
         }
 
-        void OnTrigger(Collider collider)
+        public void OnHeadStomp(Collider collider)
         {
-            var body = collider.Object.SearchComponent<RigidBody>();
-            if (body.Momentum.Y < 0)
-                return;
-
             _material.Texture = EmptyTexture;
 
             if(Item != null && _toMove != null)
