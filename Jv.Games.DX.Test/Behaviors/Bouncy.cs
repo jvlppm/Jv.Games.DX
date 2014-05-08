@@ -18,22 +18,32 @@ namespace Jv.Games.DX.Test.Behaviors
                 var rigidBody = collider.Object.SearchComponent<RigidBody>();
                 if (rigidBody != null)
                 {
+                    Vector3 mask = Vector3.Zero;
                     if ((rigidBody.Momentum.X < 0) != (Force.X < 0))
+                    {
+                        rigidBody.Acceleration.X = 0;
+                        rigidBody.InstantAcceleration.X = 0;
                         rigidBody.Momentum.X = 0;
-                    else
-                        rigidBody.Momentum.X *= Restitution.X;
+                        mask.X = 1;
+                    }
 
                     if ((rigidBody.Momentum.Y < 0) != (Force.Y < 0))
+                    {
+                        rigidBody.Acceleration.Y = 0;
+                        rigidBody.InstantAcceleration.Y = 0;
                         rigidBody.Momentum.Y = 0;
-                    else
-                        rigidBody.Momentum.Y *= Restitution.Y;
+                        mask.Y = 1;
+                    }
 
                     if ((rigidBody.Momentum.Z < 0) != (Force.Z < 0))
+                    {
+                        rigidBody.Acceleration.Z = 0;
+                        rigidBody.InstantAcceleration.Z = 0;
                         rigidBody.Momentum.Z = 0;
-                    else
-                        rigidBody.Momentum.Z *= Restitution.Z;
+                        mask.Z = 1;
+                    }
 
-                    rigidBody.Push(Force, true);
+                    rigidBody.Push(Force * mask, true);
                 }
             }
         }
