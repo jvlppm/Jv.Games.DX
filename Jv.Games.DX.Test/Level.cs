@@ -73,7 +73,7 @@ namespace Jv.Games.DX.Test
 
         public override void Init()
         {
-            RigidBody.MeterSize = 3;
+            RigidBody.MeterSize = 6.6f;
             base.Init();
         }
 

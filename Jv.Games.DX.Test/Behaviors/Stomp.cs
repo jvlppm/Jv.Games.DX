@@ -30,6 +30,8 @@ namespace Jv.Games.DX.Test.Behaviors
                 var body = collider.Object.SearchComponent<RigidBody>();
                 if (body != null)
                 {
+                    body.Acceleration.Y = 0;
+                    body.InstantAcceleration.Y = 0;
                     body.Momentum.Y = 0;
                     body.Push(new SharpDX.Vector3(0, 2.5f, 0), true);
                 }

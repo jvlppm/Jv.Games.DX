@@ -7,8 +7,8 @@ namespace Jv.Games.DX.Components
     {
         public static float MeterSize = 1;
 
-        Vector3 _acceleration;
-        Vector3 _instantAcceleration;
+        public Vector3 Acceleration;
+        public Vector3 InstantAcceleration;
         public Collider Collider;
         Scene _scene;
 
@@ -19,8 +19,8 @@ namespace Jv.Games.DX.Components
 
         public RigidBody()
         {
-            _acceleration = Vector3.Zero;
-            _instantAcceleration = Vector3.Zero;
+            Acceleration = Vector3.Zero;
+            InstantAcceleration = Vector3.Zero;
             Momentum = Vector3.Zero;
         }
 
@@ -60,10 +60,11 @@ namespace Jv.Games.DX.Components
             if (MaxSpeed != null && toMove != Vector3.Zero)
             {
                 var speed = toMove;
+                var maxSpeed = MeterSize * MaxSpeed * (float)deltaTime.TotalSeconds;
                 toMove = new Vector3(
-                    Math.Abs(speed.X) > MaxSpeed.Value.X ? MaxSpeed.Value.X * (speed.X < 0 ? -1 : 1) : speed.X,
-                    Math.Abs(speed.Y) > MaxSpeed.Value.Y ? MaxSpeed.Value.Y * (speed.Y < 0 ? -1 : 1) : speed.Y,
-                    Math.Abs(speed.Z) > MaxSpeed.Value.Z ? MaxSpeed.Value.Z * (speed.Z < 0 ? -1 : 1) : speed.Z);
+                    Math.Abs(speed.X) > maxSpeed.Value.X ? maxSpeed.Value.X * (speed.X < 0 ? -1 : 1) : speed.X,
+                    Math.Abs(speed.Y) > maxSpeed.Value.Y ? maxSpeed.Value.Y * (speed.Y < 0 ? -1 : 1) : speed.Y,
+                    Math.Abs(speed.Z) > maxSpeed.Value.Z ? maxSpeed.Value.Z * (speed.Z < 0 ? -1 : 1) : speed.Z);
 
                 //var speed = new Vector3(toMove.X, 0, toMove.Z).Length();
                 //var maxSpeed = MaxSpeed.Value.Length();
@@ -85,8 +86,8 @@ namespace Jv.Games.DX.Components
 
         public void Update(TimeSpan deltaTime)
         {
-            var addedInstantAccel = _instantAcceleration;
-            var addedAccel = _acceleration;
+            var addedInstantAccel = InstantAcceleration;
+            var addedAccel = Acceleration;
 
             var accellSecs = addedAccel * (float)deltaTime.TotalSeconds + addedInstantAccel;
 
@@ -107,8 +108,8 @@ namespace Jv.Games.DX.Components
                 Math.Max(1 - Friction.Z * (float)deltaTime.TotalSeconds, 0)
             );
 
-            _instantAcceleration -= addedInstantAccel;
-            _acceleration -= addedAccel;
+            InstantAcceleration -= addedInstantAccel;
+            Acceleration -= addedAccel;
         }
 
         public bool ValidPosition(Vector3 offset)
@@ -156,9 +157,9 @@ namespace Jv.Games.DX.Components
                 force /= Mass;
 
             if (!instantaneous)
-                _acceleration += force;
+                Acceleration += force;
             else
-                _instantAcceleration += force;
+                InstantAcceleration += force;
         }
     }
 }

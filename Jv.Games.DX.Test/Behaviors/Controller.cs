@@ -15,16 +15,13 @@ namespace Jv.Games.DX.Test.Behaviors
     {
         RigidBody _rigidBody;
         TimeSpan _holdingJump;
-        float _startJumpHeight;
-        float _maxJumpHeight;
+        TimeSpan _jumpTime;
+        bool _canJump;
 
-        public float JumpSpeed = 4;
-        public float MinJumpHeight = 0;
-        public float MaxJumpHeight = 2;
-        public float AdditionalForceDelay = 4;
-        public float AdditionalForce = 2;
-        public float MoveForce = 20;
-        public float RunningForce = 30;
+        public TimeSpan MaxJumpTime = TimeSpan.FromSeconds(0.2);
+        public float JumpSpeed = 2.2f;
+        public float MoveForce = 3;
+        public float RunningForce = 5;
         public TimeSpan JumpTimeRange = TimeSpan.FromSeconds(0.2);
 
 
@@ -42,6 +39,8 @@ namespace Jv.Games.DX.Test.Behaviors
             return !_rigidBody.ValidPosition(new Vector3(0, -0.05f, 0));
         }
 
+        KeyboardState? _oldState;
+
         public void Update(TimeSpan deltaTime)
         {
             var state = Keyboard.GetState();
@@ -52,37 +51,31 @@ namespace Jv.Games.DX.Test.Behaviors
                 _holdingJump += deltaTime;
             else
             {
+                _canJump = false;
                 _holdingJump = TimeSpan.Zero;
-                _maxJumpHeight = 0;
             }
 
             if (IsOnFloor())
             {
-                if (state.IsKeyDown(Keys.Space) || state.IsKeyDown(Keys.Up))
+                _canJump = true;
+                _jumpTime = TimeSpan.Zero;
+                if (_holdingJump > TimeSpan.Zero && _holdingJump < JumpTimeRange)
                 {
-                    if (_holdingJump < JumpTimeRange && _maxJumpHeight == 0)
-                    {
-                        _rigidBody.Momentum.Y = 0;
-                        _rigidBody.Push(new Vector3(0, JumpSpeed, 0), true);
-                        _startJumpHeight = Object.Transform.TranslationVector.Y;
-                    }
+                    _rigidBody.InstantAcceleration *= new Vector3(1, 0, 1);
+                    _rigidBody.Momentum = new Vector3(_rigidBody.Momentum.X, JumpSpeed, _rigidBody.Momentum.Z);
+                    _jumpTime += deltaTime;
                 }
             }
-            else
+            else if (_canJump)
             {
-                var jumpHeight = Object.Transform.TranslationVector.Y - _startJumpHeight;
                 if (_rigidBody.Momentum.Y < JumpSpeed / 2)
-                    _maxJumpHeight = MaxJumpHeight;
-
-                if (jumpHeight > _maxJumpHeight)
-                    _maxJumpHeight = jumpHeight;
-
-                if (_maxJumpHeight > 0 && (_maxJumpHeight < MinJumpHeight || ((state.IsKeyDown(Keys.Space) || state.IsKeyDown(Keys.Up)) && _maxJumpHeight < MaxJumpHeight)))
+                    _canJump = false;
+                else if (_jumpTime > TimeSpan.Zero && _jumpTime < MaxJumpTime)
                 {
-                    _rigidBody.Momentum.Y = JumpSpeed;
+                    _rigidBody.InstantAcceleration *= new Vector3(1, 0, 1);
+                    _rigidBody.Momentum = new Vector3(_rigidBody.Momentum.X, JumpSpeed, _rigidBody.Momentum.Z);
+                    _jumpTime += deltaTime;
                 }
-                else
-                    _maxJumpHeight = 0;
             }
 
             var move = state.IsKeyDown(Keys.ShiftKey) ? RunningForce : MoveForce;
@@ -90,8 +83,22 @@ namespace Jv.Games.DX.Test.Behaviors
             if (state.IsKeyDown(Keys.Right))
                 _rigidBody.Push(new SharpDX.Vector3(move, 0, 0));
 
+            //if (_oldState != null && state.IsKeyDown(Keys.Z) && !_oldState.Value.IsKeyDown(Keys.Z))
+            //    JumpSpeed += 0.1f;
+            //if (_oldState != null && state.IsKeyDown(Keys.X) && !_oldState.Value.IsKeyDown(Keys.X))
+            //    JumpSpeed -= 0.1f;
+
+            //if (_oldState != null && state.IsKeyDown(Keys.A) && !_oldState.Value.IsKeyDown(Keys.A))
+            //    MaxJumpTime += TimeSpan.FromSeconds(0.1);
+            //if (_oldState != null && state.IsKeyDown(Keys.S) && !_oldState.Value.IsKeyDown(Keys.S))
+            //    MaxJumpTime -= TimeSpan.FromSeconds(0.1);
+
+
+
             if (state.IsKeyDown(Keys.Left))
                 _rigidBody.Push(new SharpDX.Vector3(-move, 0, 0));
+
+            _oldState = state;
         }
     }
 }

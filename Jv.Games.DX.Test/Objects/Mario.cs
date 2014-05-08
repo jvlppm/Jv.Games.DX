@@ -75,11 +75,11 @@ namespace Jv.Games.DX.Test.Objects
 
         void LoadBehaviors()
         {
-            _rigidBody = new RigidBody { MaxSpeed = new Vector3(4, 10, 4), Friction = new Vector3(8f, 0, 8f) };
+            _rigidBody = new RigidBody { Friction = new Vector3(3f, 0, 0) };
             Add(_rigidBody);
             Add(new MainPlayerDeath());
             Add(new Gravity());
-            Add(new Controller { MoveForce = 20 });
+            Add(new Controller());
             Add(new LookForward());
             _blink = new Blink();
             Add(_blink);

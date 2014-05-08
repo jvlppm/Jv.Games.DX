@@ -33,7 +33,7 @@ namespace Jv.Games.DX.Test.Behaviors
                     CurrentDirection *= -1;
             }
 
-            _body.Push(CurrentDirection);
+            _body.Push(CurrentDirection * Speed);
         }
     }
 }

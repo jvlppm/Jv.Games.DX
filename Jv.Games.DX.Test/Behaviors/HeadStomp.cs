@@ -9,7 +9,8 @@ namespace Jv.Games.DX.Test.Behaviors
         float _currentMove;
         const float MaxMove = 0.3f;
         public Func<Collider, bool> CanDestroy;
-        int _moveDirection = 1, _lastDirection;
+        int _moveDirection = 1;
+        float _lastDirection;
         bool _moving;
         Matrix _originalPosition;
         Collider _lastCollider;
@@ -70,14 +71,12 @@ namespace Jv.Games.DX.Test.Behaviors
             var delta = (float)deltaTime.TotalSeconds * 2 * _moveDirection;
 
             if (ValidatePosition && !_body.ValidPosition(Vector3.Zero))
-                _body.Push(new Vector3(2 * _lastDirection, 3, _body.Momentum.Z), true);
-            else if (_body != null)
-                _lastDirection = _body.Momentum.X > 0? 1 : -1;
+                _body.Momentum = new Vector3(_lastDirection, 2, 0);
+            if (_body != null)
+                _lastDirection = _body.Momentum.X;
 
             if (!_moving)
                 return;
-
-
 
             Object.Translate(new Vector3(0, delta, 0));
             _currentMove += delta;

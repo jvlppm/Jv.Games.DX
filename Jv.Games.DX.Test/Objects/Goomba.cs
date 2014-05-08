@@ -29,8 +29,8 @@ namespace Jv.Games.DX.Test.Objects
 
             Tag = "npc";
             Add(new Gravity());
-            Add(new RandomWalk { CurrentDirection = new Vector3(-1, 0, 0) });
-            Add(new RigidBody { MaxSpeed = new Vector3(0.4f, float.PositiveInfinity, 0), Friction = new Vector3(3) });
+            Add(new RandomWalk { CurrentDirection = new Vector3(-1, 0, 0), Speed = 0.75f });
+            Add(new RigidBody { Friction = new Vector3(3, 0, 0) });
             Add(new AxisAlignedBoxCollider { RadiusWidth = 0.45f, RadiusDepth = 0.45f, RadiusHeight = 0.45f });
             Add(new Stomp { Tags = new[] { "player" } });
             Add(new DieOnStomp { Tags = new[] { "player" } });

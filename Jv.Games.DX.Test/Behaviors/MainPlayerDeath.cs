@@ -97,7 +97,7 @@ namespace Jv.Games.DX.Test.Behaviors
 
         public event EventHandler OnDeathStarted;
         public event EventHandler OnDeathFinalized;
-        public float JumpForce = 5;
+        public float JumpForce = 4f;
         public TimeSpan Delay = TimeSpan.FromSeconds(0.2);
 
         public void OnDeath()
