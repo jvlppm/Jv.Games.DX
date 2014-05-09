@@ -45,8 +45,6 @@ namespace Jv.Games.DX.Test.Behaviors
         {
             var state = Keyboard.GetState();
 
-            System.Diagnostics.Debug.WriteLine(_holdingJump);
-
             if (state.IsKeyDown(Keys.Space) || state.IsKeyDown(Keys.Up))
                 _holdingJump += deltaTime;
             else

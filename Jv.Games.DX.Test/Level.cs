@@ -128,9 +128,8 @@ namespace Jv.Games.DX.Test
                                         deathController.Reset();
                                         ReloadScene(device);
                                         _player.Enabled = true;
-                                        _player.Transform = Matrix.Translation(_oldStartPos);
+                                        _player.Transform = Matrix.Translation(_oldStartPos.X, _oldStartPos.Y + 0.5f, 0);
                                         _player.SearchComponent<RigidBody>().Momentum = Vector3.Zero;
-                                        _player.IsSmall = true;
                                         _player.SearchComponent<Blink>().IsActive = true;
                                         _camera.Transform = _player.Transform * Matrix.Translation(0, 0, -15);
                                     };
@@ -139,8 +138,8 @@ namespace Jv.Games.DX.Test
                                 _player.Transform = Matrix.Translation(x, y + 0.5f, 0);
 
                                 _oldStartPos = new Vector3(x, y, 0);
-                                _player.IsSmall = c == 'm';
                             }
+                            _player.IsSmall = c == 'm';
                             break;
 
                         case 'G':
@@ -176,6 +175,50 @@ namespace Jv.Games.DX.Test
                                 _map.Add(new Trigger(o => o.Object.SendMessage("OnDeath", true),
                                     width, 1, 2,
                                     new Vector3(x - (float)(width - 1) / 2, y, 0)));
+                                break;
+                            }
+
+                        case '^':
+                            {
+                                int width = 1;
+                                while (x + 1 < line.Length && line[x + 1] == '^' && width < 3)
+                                {
+                                    width++;
+                                    x++;
+                                }
+                                var size = width == 1 ? 2 : 4;
+                                var sprite = _map.Add(new Objects.Sprite(device, "grass_" + width, size));
+                                sprite.Transform = Matrix.Translation(x - 0.5f, y + size / 2 - 0.5f, -0.75f);
+                                break;
+                            }
+
+                        case 'H':
+                        case 'h':
+                            {
+                                var size = c == 'H' ? 8 : 4;
+                                var sprite = _map.Add(new Objects.Sprite(device, "hill_" + size, size));
+                                sprite.Transform = Matrix.Translation(x, y + size / 2 - 0.5f, 1);
+                                break;
+                            }
+
+                        case '#':
+                            {
+                                var size = 8;
+                                var sprite = _map.Add(new Objects.Sprite(device, "castle", size));
+                                sprite.Transform = Matrix.Translation(x, y + size / 2 - 0.5f, 1);
+                                break;
+                            }
+
+                        case 'C':
+                            {
+                                int width = 1;
+                                while (x + 1 < line.Length && line[x + 1] == 'C' && width < 3)
+                                {
+                                    width++;
+                                    x++;
+                                }
+                                var cloud = _map.Add(new Cloud(device, width));
+                                cloud.Transform = Matrix.Scaling(2) * Matrix.Translation(x - (float)(width - 0.5f), y, 5f);
                                 break;
                             }
 
@@ -249,7 +292,7 @@ namespace Jv.Games.DX.Test
                     foreach (var cam in Cameras)
                     {
                         var posC = cam.GlobalTransform.TranslationVector;
-                        if ((new Vector2(posC.X - pos.X, posC.Y - pos.Y)).Length() < 30)
+                        if ((new Vector2(posC.X - pos.X, posC.Y - pos.Y)).Length() < 20)
                         {
                             shouldUpdate = true;
                             break;

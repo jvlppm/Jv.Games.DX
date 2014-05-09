@@ -18,9 +18,12 @@ struct OutputVS
 sampler Samp = sampler_state       //sampler for doing the texture-lookup
 {
 	Texture = < gTexture > ;       //apply a texture to the sampler
-	MipFilter = LINEAR;            //sampler states
-	MinFilter = LINEAR;
-	MagFilter = LINEAR;
+	MinFilter = Anisotropic;
+	MagFilter = None;
+	MipFilter = Linear;
+	MaxAnisotropy = 8;
+	AddressU = WRAP;
+	AddressV = WRAP;
 };
 
 OutputVS ColorVS(float3 posL : POSITION0, float2 texCoord : TEXCOORD0)
