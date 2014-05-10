@@ -20,14 +20,17 @@ namespace Jv.Games.DX.Test.Behaviors
 
         public void Update(TimeSpan deltaTime)
         {
-            var direction = new Vector3(RigidBody.Momentum.X, 0, RigidBody.Momentum.Z);
+            LookTo(new Vector3(RigidBody.Momentum.X, 0, RigidBody.Momentum.Z));
+        }
 
-            if (direction != Vector3.Zero)
-            {
-                direction.Normalize();
-                var angle = (float)Math.Atan2(-direction.X, direction.Z);
-                Object.Transform = Matrix.RotationY(angle) * Matrix.Translation(Object.Transform.TranslationVector);
-            }
+        public void LookTo(Vector3 direction)
+        {
+            if (direction == Vector3.Zero)
+                return;
+
+            direction.Normalize();
+            var angle = (float)Math.Atan2(-direction.X, direction.Z);
+            Object.Transform = Matrix.RotationY(angle) * Matrix.Translation(Object.Transform.TranslationVector);
         }
     }
 }

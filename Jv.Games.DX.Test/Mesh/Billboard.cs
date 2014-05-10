@@ -25,10 +25,10 @@ namespace Jv.Games.DX.Test.Mesh
                 new Vertex { Position = new Vector3(+w, +h, 0), UV = new Vector2(1, 0), Normal = frontNormal },
                 
                 // Back face - 4
-                new Vertex { Position = new Vector3(+w, -h, 0), UV = new Vector2(0, 1), Normal = backNormal },
-                new Vertex { Position = new Vector3(+w, +h, 0), UV = new Vector2(0, 0), Normal = backNormal },
-                new Vertex { Position = new Vector3(-w, -h, 0), UV = new Vector2(1, 1), Normal = backNormal },
-                new Vertex { Position = new Vector3(-w, +h, 0), UV = new Vector2(1, 0), Normal = backNormal },
+                new Vertex { Position = new Vector3(+w, -h, 0), UV = new Vector2(1, 1), Normal = backNormal },
+                new Vertex { Position = new Vector3(+w, +h, 0), UV = new Vector2(1, 0), Normal = backNormal },
+                new Vertex { Position = new Vector3(-w, -h, 0), UV = new Vector2(0, 1), Normal = backNormal },
+                new Vertex { Position = new Vector3(-w, +h, 0), UV = new Vector2(0, 0), Normal = backNormal },
             };
 
             IndexData = new ushort[]{

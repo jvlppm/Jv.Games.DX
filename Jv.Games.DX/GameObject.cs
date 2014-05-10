@@ -207,6 +207,26 @@ namespace Jv.Games.DX
                 yield return child;
         }
 
+        public IEnumerable<T> SearchObjectsRecursively<T>(Func<T, bool> predicate) where T : GameObject
+        {
+            var toProcess = new Queue<GameObject>();
+            toProcess.Enqueue(this);
+            GameObject current;
+
+            while (toProcess.Count > 0)
+            {
+                current = toProcess.Dequeue();
+
+                var possible = current as T;
+
+                if (possible != null && predicate(possible))
+                    yield return possible;
+
+                foreach (var c in current._children)
+                    toProcess.Enqueue(c);
+            }
+        }
+
         public T SearchComponent<T>(List<GameObject> ignoreObjects = null) where T : Components.Component
         {
             var toProcess = new Queue<GameObject>();

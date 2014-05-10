@@ -81,6 +81,7 @@ namespace Jv.Games.DX.Test.Objects
             Add(new Gravity());
             Add(new Controller());
             Add(new LookForward());
+            Add(new WalkToCastleAfterPoll());
             _blink = new Blink();
             Add(_blink);
         }

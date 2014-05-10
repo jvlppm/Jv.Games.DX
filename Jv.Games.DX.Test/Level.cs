@@ -19,7 +19,7 @@ namespace Jv.Games.DX.Test
         static TimeSpan MaxFrameDelay = TimeSpan.FromSeconds(1 / 8.0f);
 
         Vector3 _oldStartPos;
-
+        bool _reloadScene;
         TimeSpan _checkFileCount;
         TimeSpan VerifyMapFile = TimeSpan.FromSeconds(2);
         Mario _player;
@@ -66,9 +66,14 @@ namespace Jv.Games.DX.Test
                 _camera.SetPerspective(60, window.Width / (float)window.Height, 1, 5000);
                 //camera.SetOrthographic(20, 20 * (window.Height / (float)window.Width), 1, 5000);
 
-                _camera.Translate(_player.Transform.TranslationVector.X, _player.Transform.TranslationVector.Y + 4, _player.Transform.TranslationVector.Z - 15);
+                MoveCameraToPlayer();
                 Add(_camera);
             }
+        }
+
+        void MoveCameraToPlayer()
+        {
+            _camera.Transform = Matrix.Translation(_player.Transform.TranslationVector.X, _player.Transform.TranslationVector.Y + 4, _player.Transform.TranslationVector.Z - 15);
         }
 
         public override void Init()
@@ -112,7 +117,8 @@ namespace Jv.Games.DX.Test
                                     _player = (Mario)Add(new Mario(device));
                                     var deathController = _player.SearchComponent<MainPlayerDeath>();
                                     GameObject dummyCameraTarget = null;
-                                    deathController.OnDeathStarted += delegate {
+                                    deathController.OnDeathStarted += delegate
+                                    {
                                         dummyCameraTarget = Add(new GameObject());
                                         dummyCameraTarget.Translate(_player.GlobalTransform.TranslationVector);
                                         _camera.SearchComponent<LookAtObject>().Target = dummyCameraTarget;
@@ -136,7 +142,6 @@ namespace Jv.Games.DX.Test
                                 }
 
                                 _player.Transform = Matrix.Translation(x, y + 0.5f, 0);
-
                                 _oldStartPos = new Vector3(x, y, 0);
                             }
                             _player.IsSmall = c == 'm';
@@ -155,14 +160,28 @@ namespace Jv.Games.DX.Test
                             break;
 
                         case 'P':
-                            if (l > 0 && mapContent[l - 1].Length > x && mapContent[l - 1][x] == c)
-                                break;
-                            var height = 1;
-                            while (l + height < mapContent.Length && mapContent[l + height][x] == c)
-                                height++;
+                            {
+                                if (l > 0 && mapContent[l - 1].Length > x && mapContent[l - 1][x] == c)
+                                    break;
+                                var height = 1;
+                                while (l + height < mapContent.Length && mapContent[l + height][x] == c)
+                                    height++;
 
-                            _map.Add(new Pipe(device, height)).Translate(x, y - (float)(height - 1) / 2, 0);
-                            break;
+                                _map.Add(new Pipe(device, height)).Translate(x, y - (float)(height - 1) / 2, 0);
+                                break;
+                            }
+
+                        case '|':
+                            {
+                                if (l > 0 && mapContent[l - 1].Length > x && mapContent[l - 1][x] == c)
+                                    break;
+                                var height = 1;
+                                while (l + height < mapContent.Length && mapContent[l + height][x] == c)
+                                    height++;
+
+                                _map.Add(new Poll(device, height)).Translate(x, y - (float)(height - 1) / 2, 0);
+                                break;
+                            }
 
                         case 'D':
                             {
@@ -260,8 +279,22 @@ namespace Jv.Games.DX.Test
                 _map.Init();
         }
 
+        public void OnLevelComplete()
+        {
+            _reloadScene = true;
+        }
+
         public override void Update(Device device, TimeSpan deltaTime)
         {
+            if (_reloadScene)
+            {
+                _oldStartPos = _oldStartPos + Vector3.One;
+                ReloadScene(device);
+                MoveCameraToPlayer();
+                _reloadScene = false;
+                return;
+            }
+
             _checkFileCount += deltaTime;
             if (_checkFileCount > VerifyMapFile)
             {

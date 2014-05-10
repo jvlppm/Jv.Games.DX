@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\Blink.cs" />
+    <Compile Include="Behaviors\WalkToCastleAfterPoll.cs" />
     <Compile Include="Behaviors\Gravity.cs" />
     <Compile Include="Behaviors\HeadStomp.cs" />
     <Compile Include="Behaviors\MainPlayerDeath.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Mesh\TriangleGrid.cs" />
     <Compile Include="MyGame.cs" />
     <Compile Include="Mesh\Cube.cs" />
+    <Compile Include="Objects\Poll.cs" />
     <Compile Include="Objects\Sprite.cs" />
     <Compile Include="Objects\Cloud.cs" />
     <Compile Include="Objects\Goomba.cs" />
@@ -152,6 +154,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Assets\Textures\sprite_castle.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\Textures\poll.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\Textures\poll_top.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\Textures\sprite_flag.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Content Include="Materials\texture.fx">

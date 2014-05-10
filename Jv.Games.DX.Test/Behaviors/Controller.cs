@@ -21,7 +21,7 @@ namespace Jv.Games.DX.Test.Behaviors
         public TimeSpan MaxJumpTime = TimeSpan.FromSeconds(0.2);
         public float JumpSpeed = 2.2f;
         public float MoveForce = 3;
-        public float RunningForce = 5;
+        public float RunningForce = 6;
         public TimeSpan JumpTimeRange = TimeSpan.FromSeconds(0.2);
 
 

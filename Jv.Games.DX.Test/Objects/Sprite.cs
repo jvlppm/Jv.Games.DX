@@ -10,9 +10,13 @@ namespace Jv.Games.DX.Test.Objects
     {
         static Dictionary<string, Texture> Textures = new Dictionary<string, Texture>();
 
+        public string Name;
+
         public Sprite(Device device, string name, float size)
         {
             string fileName = "sprite_" + name;
+
+            Name = name;
 
             Texture texture;
             if (!Textures.TryGetValue(fileName, out texture))
