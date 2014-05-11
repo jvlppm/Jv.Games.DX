@@ -8,7 +8,7 @@ namespace Jv.Games.DX.Test
         [STAThread]
         static void Main(string[] args)
         {
-            using (var win = new GameWindow("Meu jogo", 800, 600, fullScreen: false, vsync: true, hardwareAccelerated: true))
+            using (var win = new GameWindow("Cubeecraft Mario", 800, 600, fullScreen: false, vsync: true, hardwareAccelerated: true))
             using (var game = new MyGame())
                 win.Run(game);
         }
